@@ -15,6 +15,7 @@ A. [Barcode & Peptide Detection Script - Updated Version](#detection)
 4. [The Output Files](#the-output-files)
     - [For Barcode Detection](#for-barcode-detection-1)
     - [For Peptide Detection](#for-peptide-detection-1)
+
 B. [Barcode & Peptide Analysis Script - Updated Version](#analysis)
 1. [Requirements](#requirements)
 2. [Prepare your Input Files](#prepare-your-input-files)
