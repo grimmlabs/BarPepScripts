@@ -37,6 +37,8 @@ To run this script, you have to have Python 3 (version used to test this script:
 - Pandas (2.2.2)
 - Matplotlib (3.8.4)
 - Seaborn (0.13.2)
+
+**Note:** Especially for the pandas module, it is important that you use the indicated version! The script might not work with older or newer versions of pandas.
   
 &emsp;
 
@@ -190,16 +192,6 @@ Additionally, if you set the flag for the plot argument, a pdf file with plots s
 
 # Barcode & Peptide Analysis Script - Updated Version
 This repository provides an updated combined version of the [Barcode Analysis Script and the Peptide Extraction and Ranking Script](https://github.com/grimmlabs/AAV_GrimmLab_JoVE2022). It is the follow-up script of the _Barcode & Peptide Detection Script_ and can be used to analyse its output files. Just like the _Detection Script_, this _Analysis Script_ can be applied both for barcoded AAV screenings as well as for peptide display libraries. When running the script in barcode analysis mode, it performs three (or optionally five) normalization steps, creating an output file for each one. When running the script in peptide analysis mode, it translates the found DNA sequences of the peptides into amino acid sequences and ranks them by their frequency. This README will give you a detailed instruction on how to use the updated combined script, i.e., how your input files should look like, what arguments you need to specifiy, and what kind of output files will be generated. Especially if you do not feel so comfortable with running scripts, please read this instruction carefully! 
-
-&emsp;
-
-## Requirements
-To run this script, you have to have Python 3 (version used to test this script: 3.12.3) installed on your computer. Additionally, the following modules should be installed (the script was tested with the indicated versions):
-- Biopython (1.83)
-- Numpy (1.26.4)
-- Pandas (2.2.2)
-
-**Note:** Especially for the pandas module, it is important that you use the indicated version! The script might not work with older or newer versions of pandas.
 
 &emsp;
 
