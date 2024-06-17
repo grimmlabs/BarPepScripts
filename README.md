@@ -348,8 +348,8 @@ This CSV file contains the proportional count values normalized to the input lib
 
 $$
 \displaystyle
-\ P<sup>*</sup>_{αβ}= \frac{P_{αβ}}{L_{α}}
-$$  
+\ P^\*_{αβ}= \frac{P_{αβ}}{L_{α}}
+$$
 
 - **B<sub>αβ</sub> File:**  
 In this CSV file,  P*<sub>αβ</sub> is normalized to the qPCR-determined vg/dg or RQ, termed G<sub>β</sub>, to allow a comparison of one variant α over all analyzed tissues β:
