@@ -348,7 +348,7 @@ This CSV file contains the proportional count values normalized to the input lib
 
 $$
 \displaystyle
-\ P^{\ast}_{αβ} = \frac{P_{αβ}}{L_{α}}
+\ P{\ast}_{αβ} = \frac{P_{αβ}}{L_{α}}
 $$
 
 - **B<sub>αβ</sub> File:**  
