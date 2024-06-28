@@ -198,7 +198,9 @@ This Script can be applied both for barcoded and peptide insertion screens, indi
 
 ## Prepare your Input Files
 ### _For Barcode Analysis_
-To successfully run this script, you first need to run the _BarPepDetection_ script on your sequencing data, including your input library. Then, you will need to prepare one input file containing a table with your filenames, animals, sample type, tissues, and vg/dg values. You can easily do this in Excel or a similar program and then save it as a CSV file. **The separator in the CSV file must be a ','.**
+
+In this mode the script requires the outout from the _BarPepDetection_ script as well as one input file containing a table with your filenames, animals, tissues, and a weight_varialble (vg/dg). This file is easily prepared in Excel or a similar program and then saved as a CSV file. **The separator in the CSV file has to be a ','.** 
+
 &emsp;
 
 The input file MUST follow this structure:
@@ -219,7 +221,7 @@ The input file MUST follow this structure:
 
 The weight variable is used for the calculation of the B<sub>αβ</sub>, V<sub>αβ</sub>, and T<sub>αβ</sub> values (see output files). Traditionally these are vg/dg measurements of every tissue, but can be replaced by a value of choice.
   
-Other input files that you will need, but won't have to specially prepare:
+Other input files that you will need, but won't have to be specially prepared:
 
   - A folder with **the _Variant.csv output files** from the _BarPepDetection_ script containing the counts of the expected variants.  
 
@@ -230,7 +232,7 @@ Other input files that you will need, but won't have to specially prepare:
 &emsp;
 
 ### _For Peptide Analysis_
-To successfully run this script, you first need to run the _BarPepDetection_ on your sequencing data. Then, you will need to prepare one input file containing a table with your filenames, animals, and tissues. You can easily do this in Excel or a similar program and then save it as a CSV file. **The separator in the CSV file has to be a ','.** 
+In this mode the script requires the outout from the _BarPepDetection_ script as well as one input file containing a table with your filenames, animals, and tissues. This file is easily prepared in Excel or a similar program and then saved as a CSV file. **The separator in the CSV file has to be a ','.** 
 &emsp;
 
 The input file MUST follow this structure:
@@ -249,7 +251,7 @@ The input file MUST follow this structure:
 
 **IMPORTANT:** The names of the columns have to be written exactly how it is shown here! Do not use a '_' in your animal or tissue entries!
 
-Other input files that you will need, but won't have to specially prepare:
+Other input files that you will need, but won't have to be specially prepared:
   - A folder with **the _PV.csv output files from the _BarPepDetection_** containing the counts of the found peptides.
 
 &emsp;
