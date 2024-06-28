@@ -37,7 +37,7 @@ peptide = ap.add_argument_group("Additional Arguments for Peptide Analysis")
 
 # Add arguments to argument groups
 required.add_argument("-a", "--mode", required = True, choices=["BC", "PV"], help = "Which mode do you want to run the script in? Type 'BC' for barcode analysis or 'PV' for peptide analysis.")
-required.add_argument("-i'", "--inputfile", required = True, help = "Path to your input CSV file containing the file names, animal, and tissue (+ for BC analysis sample type and vg/dg).")
+required.add_argument("-i'", "--inputfile", required = True, help = "Path to your input CSV file containing the file names, animal, and tissue (+ for BC analysis sample type and weight_variable).")
 required.add_argument("-d", "--directory", required = True, help = "Path to the directory containing the output CSV files from the Detection Script.")
 optional.add_argument("-o", "--outputdir", required=False, help="Path to the directory where the output files should be saved. If not specified, a new folder in the directory with the input data will be automatically created for the output files.")
 optional.add_argument("-w", "--silence", action="store_false", help="Set flag to avoid printouts in the terminal.")
@@ -142,15 +142,13 @@ if args.mode == "BC":
     # Add a pseudocount to any zero counts
     pseudocount = 0.000001
     # Count the number of zeros before replacement
-    zero_count_before = (inputfile['vg/dg'] == 0).sum()
+    zero_count_before = (inputfile['weight_variable'] == 0).sum()
     # Replace zero values with the pseudocount
-    inputfile['vg/dg'] = inputfile['vg/dg'].replace(0, pseudocount)
-    # Count the number of pseudocounts after replacement
-    pseudocount_count_after = (inputfile['vg/dg'] == pseudocount).sum()
+    inputfile['weight_variable'] = inputfile['weight_variable'] + pseudocount
     # Print a warning message if any zero values were replaced
-    if pseudocount_count_after > 0:
+    if zero_count_before > 0:
         if silence:
-            print(f"Warning: {pseudocount_count_after} zero values were replaced by a pseudocount of {pseudocount}\n")
+            print(f"Warning: {zero_count_before} zero values found in weight_variable. {pseudocount} was added to all values in column weight_variable.\n")
 
     # Print the inputfile DataFrame
     if silence:
@@ -168,12 +166,11 @@ if args.mode == "BC":
     # Count the number of zeros before replacement
     zero_count_before = (variants_norm['Count'] == 0).sum()
     # Replace zero values with the pseudocount
-    variants_norm['Count'] = variants_norm['Count'].replace(0, pseudocount)
-    # Count the number of pseudocounts after replacement
-    pseudocount_count_after = (variants_norm['Count'] == pseudocount).sum()
+    variants_norm['Count'] = variants_norm['Count'] + pseudocount
     # Print a warning message if any zero values were replaced
-    if pseudocount_count_after > 0:
-        print(f"Warning: {pseudocount_count_after} zero values were replaced by a pseudocount of {pseudocount}")
+    if zero_count_before > 0:
+        if silence:
+            print(f"Warning: {zero_count_before} zero values found in counts. {pseudocount} was added to all counts.")
     # Calculate the total count
     total_count = variants_norm['Count'].sum()
     # Calculate the proportions of the counts
@@ -226,17 +223,17 @@ if args.mode == "BC":
         animal_sampletype_dfs[key] = animal_sampletype_dfs[key][new_columns]
 
 
-    # Add vg/dg as the last row for each DataFrame
+    # Add weight_variable as the last row for each DataFrame
     for key in animal_sampletype_dfs.keys():
 
         # Initialize a dictionary for the new row
         new_row = {col: None for col in animal_sampletype_dfs[key].columns}
-        new_row["Variant"] = "vg/dg"
+        new_row["Variant"] = "weight_variable"
 
         # Extract the corresponding rows from inputfile
         for idx, row in inputfile.iterrows():
             if f"{row["Animal"]}_{row["SampleType"]}" == key:
-                new_row[row["Tissue"]] = row["vg/dg"]
+                new_row[row["Tissue"]] = row["weight_variable"]
 
         # Convert the new row to a DataFrame
         new_row_df = pd.DataFrame([new_row])
@@ -270,7 +267,7 @@ if args.mode == "BC":
     # Calculate proportions
     for key, df in animal_sampletype_dfs.items():
 
-        # Create a copy of the DataFrame excluding the last row ('vg/dg')
+        # Create a copy of the DataFrame excluding the last row ('weight_variable')
         temp_df = df.iloc[:-1].copy()
 
         # Exclude the 'Variant' and 'InputNorm' columns
@@ -312,7 +309,7 @@ if args.mode == "BC":
     # Divide proportions by InputNorm
     for key, df in proportion_dfs.items():
 
-        # Create a copy of the DataFrame excluding the last row ('vg/dg')
+        # Create a copy of the DataFrame excluding the last row ('weight_variable')
         temp_df = df.iloc[:-1].copy()
 
         # Exclude the 'Variant' and 'InputNorm' columns
@@ -342,10 +339,10 @@ if args.mode == "BC":
     # Dictionary to hold new DataFrames with multiplied proportions
     multiplied_proportion_dfs = {}
 
-    # Multiply proportions by vg/dg
+    # Multiply proportions by weight_variable
     for key, df in divided_proportion_dfs.items():
 
-        # Create a copy of the DataFrame excluding the last row ('vg/dg') and 'InputNorm' column
+        # Create a copy of the DataFrame excluding the last row ('weight_variable') and 'InputNorm' column
         temp_df = df.iloc[:-1].copy()
 
         # Exclude the 'Variant' and 'InputNorm' columns
@@ -354,10 +351,10 @@ if args.mode == "BC":
         # Convert tissue/variant counts to floats
         temp_df[tissue_columns] = temp_df[tissue_columns].astype(float)
 
-        # Get the vg/dg value from the last row based on the 'Variant' column
-        vg_dg_value = df[tissue_columns].loc[df['Variant'] == 'vg/dg'].astype(float) if 'vg/dg' in df['Variant'].values else 1
+        # Get the weight_variable value from the last row based on the 'Variant' column
+        vg_dg_value = df[tissue_columns].loc[df['Variant'] == 'weight_variable'].astype(float) if 'weight_variable' in df['Variant'].values else 1
 
-        # Multiply each value by the vg/dg value
+        # Multiply each value by the weight_variable value
         temp_df[tissue_columns] = temp_df[tissue_columns].mul(vg_dg_value[tissue_columns].values)
 
         # Append the last row back to the DataFrame without performing any calculations on it
@@ -388,7 +385,7 @@ if args.mode == "BC":
         # Calculate V_αβ values
         for key, df in multiplied_proportion_dfs.items():
 
-            # Create a copy of the DataFrame excluding the last row ('vg/dg')
+            # Create a copy of the DataFrame excluding the last row ('weight_variable')
             temp_df = df.iloc[:-1].copy()
 
             # Exclude the 'Variant' and 'InputNorm' columns
@@ -397,7 +394,7 @@ if args.mode == "BC":
             # Convert tissue/variant counts to floats
             temp_df[tissue_columns] = temp_df[tissue_columns].astype(float)
 
-           # Calculate the sum of B_αβ values for each column (excluding 'vg/dg' and 'InputNorm')
+           # Calculate the sum of B_αβ values for each column (excluding 'weight_variable' and 'InputNorm')
             column_sums = temp_df[tissue_columns].sum(axis=0)
 
             # Divide each B_αβ value by the corresponding column sum to get the V_αβ values
@@ -423,7 +420,7 @@ if args.mode == "BC":
 
         # Calculate V_αβ values
         for key, df in multiplied_proportion_dfs.items():
-            # Create a copy of the DataFrame excluding the last row ('vg/dg')
+            # Create a copy of the DataFrame excluding the last row ('weight_variable')
             temp_df = df.iloc[:-1].copy()
 
             # Exclude the 'Variant' and 'InputNorm' columns
