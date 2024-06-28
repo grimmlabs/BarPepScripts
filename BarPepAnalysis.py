@@ -42,6 +42,7 @@ required.add_argument("-d", "--directory", required = True, help = "Path to the 
 optional.add_argument("-o", "--outputdir", required=False, help="Path to the directory where the output files should be saved. If not specified, a new folder in the directory with the input data will be automatically created for the output files.")
 optional.add_argument("-w", "--silence", action="store_false", help="Set flag to avoid printouts in the terminal.")
 optional.add_argument("-z" "--version", action="version", version="\n"*5+"====== Barcode & Peptide Analysis Script 2.0 (written by E. Locke) ======\n\n", help="Set flag if you want to print script's version number and exit.")
+optional.add_argument("-p", "--pseudo", type=float, default=1e-6, help="Pseudocount to be added to columns containing zeroes.")
 barcode.add_argument("-l", "--libraryNorm", required = False, help = "Path to the output CSV file of the input library from the Detection Script.")
 barcode.add_argument("-x", "--extraNorm", action="store_true", help="Set flag to compute the V_αβ and T_αβ values.")
 peptide.add_argument("-t", "--topNumber", required=False, type = int, default = 100, help="Number of peptide sequences you want to limit the output to. Default is set to 100.")
@@ -139,16 +140,14 @@ if args.mode == "BC":
     # Read in the CSV file containing the file names with sample type, animal, tissue, and DNA/RNA normalization values.
     inputfile = pd.read_csv(input, sep=',')
 
-    # Add a pseudocount to any zero counts
-    pseudocount = 0.000001
     # Count the number of zeros before replacement
     zero_count_before = (inputfile['weight_variable'] == 0).sum()
-    # Replace zero values with the pseudocount
-    inputfile['weight_variable'] = inputfile['weight_variable'] + pseudocount
+    # apply pseudocount
+    inputfile['weight_variable'] = inputfile['weight_variable'] + args.pseudo
     # Print a warning message if any zero values were replaced
     if zero_count_before > 0:
         if silence:
-            print(f"Warning: {zero_count_before} zero values found in weight_variable. {pseudocount} was added to all values in column weight_variable.\n")
+            print(f"Warning: {zero_count_before} zero values found in weight_variable. {args.pseudo} was added to all values in column weight_variable.\n")
 
     # Print the inputfile DataFrame
     if silence:
@@ -161,16 +160,14 @@ if args.mode == "BC":
 
     # Select only the 'Variant' and 'Count' columns
     variants_norm = variants_norm[['Variant', 'Count']]
-    # Add a pseudocount to any zero counts
-    pseudocount = 0.000001
     # Count the number of zeros before replacement
     zero_count_before = (variants_norm['Count'] == 0).sum()
-    # Replace zero values with the pseudocount
-    variants_norm['Count'] = variants_norm['Count'] + pseudocount
+    # apply pseudocount
+    variants_norm['Count'] = variants_norm['Count'] + args.pseudo
     # Print a warning message if any zero values were replaced
     if zero_count_before > 0:
         if silence:
-            print(f"Warning: {zero_count_before} zero values found in counts. {pseudocount} was added to all counts.")
+            print(f"Warning: {zero_count_before} zero values found in counts. {args.pseudo} was added to all counts.")
     # Calculate the total count
     total_count = variants_norm['Count'].sum()
     # Calculate the proportions of the counts
