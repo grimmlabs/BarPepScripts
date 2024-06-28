@@ -197,7 +197,7 @@ Additionally, if you set the flag for the plot argument, a pdf file with plots s
 &emsp;
 &emsp;
 
-# Analysis Script
+# BarPepAnalysis
 This repository provides an updated combined version of the [Barcode Analysis Script and the Peptide Extraction and Ranking Script](https://github.com/grimmlabs/AAV_GrimmLab_JoVE2022). It is the follow-up script of the _Barcode & Peptide Detection Script_ and can be used to analyse its output files. Just like the _Detection Script_, this _Analysis Script_ can be applied both for barcoded AAV screenings as well as for peptide display libraries. When running the script in barcode analysis mode, it performs three (or optionally five) normalization steps, creating an output file for each one. When running the script in peptide analysis mode, it translates the found DNA sequences of the peptides into amino acid sequences and ranks them by their frequency. This README will give you a detailed instruction on how to use the updated combined script, i.e., how your input files should look like, what arguments you need to specifiy, and what kind of output files will be generated. Especially if you do not feel so comfortable with running scripts, please read this instruction carefully! 
 
 &emsp;
