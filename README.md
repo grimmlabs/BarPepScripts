@@ -74,13 +74,6 @@ If you want to use the script to detect peptide insertions, you will only need t
 
 ## Running the Script
 
-If you are running the script for the first time, open the Windows Terminal and call the script with 
-```
-python Script_BarcodePeptideDetection.py -h
-````
-
-This will give you a list of the arguments that you need to specifiy to run the script successfully:  
-
  &emsp;
 
 **<p style="font-size:15px;">Required arguments:</p>**
@@ -146,7 +139,7 @@ By default, the script searches for the barcode or peptide sequence over the com
 ### _Example for Barcode Detection_
 Here is an example on how to run the script for barcode detection:
 ```
-python Script_BarcodePeptideDetection.py -a BC -v ./Input/Variants.txt -c ./Input/Contaminations.txt -d ./Input/ -o ./Output/ -l ATGCTC -r CAGGGT -n 45 -m 5 -k 58 -p
+python BarPepDetection.py -a BC -v ./Input/Variants.txt -c ./Input/Contaminations.txt -d ./Input/ -o ./Output/ -l ATGCTC -r CAGGGT -n 45 -m 5 -k 58 -p
 ```
 In this example, the barcode will be searched for within the specified search-window. Moreover, the sequencing data will be checked for contaminations and a pdf file with plots showing the sequencing quality will be generated.
 
@@ -155,7 +148,7 @@ In this example, the barcode will be searched for within the specified search-wi
 ### _Example for Peptide Detection_
 Here is an example on how to run the script for peptide detection:
 ```
-python Script_BarcodePeptideDetection.py -a PV -d ./Input/ -o ./Output/ -l TCCAGGGCCAG -r GCCCAGG -s 27 -w
+python BarPepDetection.py -a PV -d ./Input/ -o ./Output/ -l TCCAGGGCCAG -r GCCCAGG -s 27 -w
  ```
 In this example, the search for the peptide sequences will not be limited to a specified window. Moreover, the pdf file with the plots will not be generated and printouts in the terminal will be avoided.
   
@@ -198,44 +191,46 @@ Additionally, if you set the flag for the plot argument, a pdf file with plots s
 &emsp;
 
 # BarPepAnalysis
-This repository provides an updated combined version of the [Barcode Analysis Script and the Peptide Extraction and Ranking Script](https://github.com/grimmlabs/AAV_GrimmLab_JoVE2022). It is the follow-up script of the _Barcode & Peptide Detection Script_ and can be used to analyse its output files. Just like the _Detection Script_, this _Analysis Script_ can be applied both for barcoded AAV screenings as well as for peptide display libraries. When running the script in barcode analysis mode, it performs three (or optionally five) normalization steps, creating an output file for each one. When running the script in peptide analysis mode, it translates the found DNA sequences of the peptides into amino acid sequences and ranks them by their frequency. This README will give you a detailed instruction on how to use the updated combined script, i.e., how your input files should look like, what arguments you need to specifiy, and what kind of output files will be generated. Especially if you do not feel so comfortable with running scripts, please read this instruction carefully! 
+
+This Script can be applied both for barcoded and peptide insertion screens, indicated by running the script in the respective _mode_. When running the script in barcode analysis mode, it performs three (or optionally five) normalization steps, creating an output file for each one. When running the script in peptide analysis mode, it translates the found DNA sequences of the peptides into amino acid sequences and ranks them by their frequency.
 
 &emsp;
 
 ## Prepare your Input Files
 ### _For Barcode Analysis_
-To successfully run this script, you first need to run the _Barcode and Peptide Detection Script_ on your sequencing data, including your input library. Then, you will need to prepare one input file containing a table with your filenames, animals, sample type, tissues, and vg/dg values. You can easily do this in Excel or a similar program and then save it as a CSV file. **The separator in the CSV file must be a ','.**
+To successfully run this script, you first need to run the _BarPepDetection_ script on your sequencing data, including your input library. Then, you will need to prepare one input file containing a table with your filenames, animals, sample type, tissues, and vg/dg values. You can easily do this in Excel or a similar program and then save it as a CSV file. **The separator in the CSV file must be a ','.**
 &emsp;
 
 The input file MUST follow this structure:
 &emsp;
 
-| Filename                | SampleType| Animal     |Tissue        | vg/dg     |
-|-------------------------|-----------|------------|--------------|-----------|
-| Sample1_Variants.csv    | cDNA      | M1         | Heart        | 0.00635   |
-| Sample2_Variants.csv    | gDNA      | M1         | Heart        | 0.00635   |
-| Sample3_Variants.cs     | cDNA      | M1         | Kidney       | 0.000293  |
-| Sample4_Variants.csv    | gDNA      | M1         | Kidney       | 0.000293  |
-| Sample5_Variants.csv    | cDNA      | M2         | Lung         | 0.00871   |
-| Sample6_Variants.csv    | gDNA      | M2         | Lung         | 0.00871   |
+| Filename                | SampleType| Animal     |Tissue        | weight_variable|
+|-------------------------|-----------|------------|--------------|----------------|
+| Sample1_Variants.csv    | cDNA      | M1         | Heart        | 0.00635        |
+| Sample2_Variants.csv    | gDNA      | M1         | Heart        | 0.00635        |
+| Sample3_Variants.cs     | cDNA      | M1         | Kidney       | 0.000293       |
+| Sample4_Variants.csv    | gDNA      | M1         | Kidney       | 0.000293       |
+| Sample5_Variants.csv    | cDNA      | M2         | Lung         | 0.00871        |
+| Sample6_Variants.csv    | gDNA      | M2         | Lung         | 0.00871        |
 
 &emsp;
 
-**IMPORTANT:** The names of the columns have to be written exactly how it is shown here! Do not use a '_' in your animal, sample type or tissue entries!  
-If you have RQ values for your cDNA samples and you would like to use them for the normalization, then just write them in the vg/dg column into the rows corresponding to your cDNA samples. The calculation will then be done with the RQ.  
+**IMPORTANT:** The names of the columns have to be written exactly how it is shown here! Do not use a '_' in your animal, sample type or tissue entries!
+
+The weight variable is used for the calculation of the B<sub>αβ</sub>, V<sub>αβ</sub>, and T<sub>αβ</sub> values (see output files). Traditionally these are vg/dg measurements of every tissue, but can be replaced by a value of choice.
   
 Other input files that you will need, but won't have to specially prepare:
 
-  - A folder with **the _Variant.csv output files from the _Barcode and Peptide Detection Script_** containing the counts of the expected variants.  
+  - A folder with **the _Variant.csv output files** from the _BarPepDetection_ script containing the counts of the expected variants.  
 
-  - **The _Variant.csv output file of your Input Library** from the _Barcode and Peptide Detection Script_. The values for the normalization to the input library will be directly calculated from this.  
+  - **The _Variant.csv output file of your Input Library** from the _BarPepDetection_ script. The values for the normalization to the input library will be directly calculated from this.  
 
 **Note**: If any read count, vg/dg, or library normalization values equal zero, they will be replaced by a pseudocount of 1x10<sup>-6</sup>. A warning will be printed in the terminal. 
 
 &emsp;
 
 ### _For Peptide Analysis_
-To successfully run this script, you first need to run the _Barcode and Peptide Detection Script_ on your sequencing data. Then, you will need to prepare one input file containing a table with your filenames, animals, and tissues. You can easily do this in Excel or a similar program and then save it as a CSV file. **The separator in the CSV file has to be a ','.** 
+To successfully run this script, you first need to run the _BarPepDetection_ on your sequencing data. Then, you will need to prepare one input file containing a table with your filenames, animals, and tissues. You can easily do this in Excel or a similar program and then save it as a CSV file. **The separator in the CSV file has to be a ','.** 
 &emsp;
 
 The input file MUST follow this structure:
@@ -255,14 +250,14 @@ The input file MUST follow this structure:
 **IMPORTANT:** The names of the columns have to be written exactly how it is shown here! Do not use a '_' in your animal or tissue entries!
 
 Other input files that you will need, but won't have to specially prepare:
-  - A folder with **the _PV.csv output files from the _Barcode and Peptide Detection Script_** containing the counts of the found peptides.
+  - A folder with **the _PV.csv output files from the _BarPepDetection_** containing the counts of the found peptides.
 
 &emsp;
 
 ## Running the Script
 If you are running the script for the first time, open the Windows Terminal and call the script with 
 ```
-python Script_BarcodePeptideAnalysis.py -h
+python BarPepDetection.py -h
 ````
 
 This will give you a list of the arguments that you need to specifiy for running the script successfully:  
@@ -315,7 +310,7 @@ You can specify the number of peptide sequences shown in the output files. The d
 
 Here is an example on how to run the script for barcode analysis:
 ```
-python Script_BarcodePeptideAnalysis.py -a BC -i ./Input/Inputfile.csv -l ./Input/Data/Input_Library_Variants.csv -d ./Input/Data/ -x
+python BarPepAnalysis.py -a BC -i ./Input/Inputfile.csv -l ./Input/Data/Input_Library_Variants.csv -d ./Input/Data/ -x
 ```
 In this example, the V<sub>αβ</sub> and T<sub>αβ</sub> values will be computed and the output files will be saved in an automatically generated folder 'BarcodeAnalysis_Results' that is saved in the directory with the input files.
 
@@ -325,7 +320,7 @@ In this example, the V<sub>αβ</sub> and T<sub>αβ</sub> values will be comput
 
 Here is an example on how to run the script for peptide analysis:
 ```
-python Script_BarcodePeptideAnalysis.py -a PV -i ./Input/Inputfile.csv -d ./Input/Data/ -o ./Output/ -t 30 -w
+python BarPepAnalysis.py -a PV -i ./Input/Inputfile.csv -d ./Input/Data/ -o ./Output/ -t 30 -w
 ```
 In this example, the top 30 ranking peptide sequences will be shown in the output files which will be saved in the specified directory. Moreover, printouts in the terminal will be avoided.
 
@@ -355,7 +350,7 @@ $$
 $$
 
 - **B<sub>αβ</sub> File:**  
-In this CSV file,  P*<sub>αβ</sub> is normalized to the qPCR-determined vg/dg or RQ, termed G<sub>β</sub>, to allow a comparison of one variant α over all analyzed tissues β:
+In this CSV file,  P*<sub>αβ</sub> is weighted by the weight_variable (e.g. vg/dg or RQ values), termed G<sub>β</sub>, to allow a comparison of one variant α over all analyzed tissues β:
 
 $$
 \displaystyle
