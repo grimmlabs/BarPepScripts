@@ -1,8 +1,8 @@
 
 #!/usr/bin/env python
 
-#__==================================== Barcode & Peptide Analysis Script 2.0 ========================================__
-#__=========================================== (written by E. Locke) =================================================__
+#__==================================== BarPepAnalysis Script 2.0 ===================================__
+#__====================================== (written by E. Locke) =====================================__
 
 
 # This script analyses output files from the BarPepDetection Script.
@@ -56,7 +56,7 @@ args = ap.parse_args()
 silence = args.silence
 
 if silence:
-    print("\n"*5+"====== Barcode & Peptide Analysis Script 2.0 (written by E. Locke) ======\n\n")
+    print("\n"*5+"====== BarPepAnalysis Script 2.0 (written by E. Locke) ======\n")
 
 
 
@@ -104,7 +104,7 @@ def save_combined_dataframe(df_dict, output_path, header, mode):
     with open(output_path, 'w') as f:
         combined_df.to_csv(f, index=False)
     if silence:
-        print(f"\n\n{header} DataFrames have been saved to {output_path}")
+        print(f"\n{header} DataFrames have been saved to {output_path}")
 
 
 
