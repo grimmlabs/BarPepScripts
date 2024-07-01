@@ -35,7 +35,7 @@ B. [BarPepAnalysis](#barpepanalysis)
 
 # Quick Tutorial
 
-These commands wil get you going in running the scripts on the provided example data set.
+These commands wil get you going in running the scripts on the provided barcoded example data set.
 
 ```
 # Detection
