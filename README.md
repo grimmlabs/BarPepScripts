@@ -226,7 +226,7 @@ Other input files that you will need, but won't have to be specially prepared:
 
   - **The _Variant.csv output file of your Input Library** from the _BarPepDetection_ script. The values for the normalization to the input library will be directly calculated from this.  
 
-**Note**: If any read count, vg/dg, or library normalization values equal zero, they will be replaced by a pseudocount of 1x10<sup>-6</sup>. A warning will be printed in the terminal. 
+**Note**: If any column contains a zero value, a pseudocount of default 1x10<sup>-6</sup> will be added to every column. A warning will be printed in the terminal. 
 
 &emsp;
 
@@ -287,6 +287,9 @@ Set this flag if you want to avoid printouts in the terminal.
 
 - **-z VERSION:**  
 Set this flag if you want to show the script's version number and exit.
+
+- **-p PSEUDO:**
+Pseudocount to be added to columns containing zeroes. Default 1e-6.
 
 &emsp;
 
