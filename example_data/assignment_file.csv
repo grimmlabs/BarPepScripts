@@ -1,4 +1,0 @@
-Filename,SampleType,Animal,Tissue,weight_variable
-m1_kidney_Variants.csv,gDNA,m1,kidney,8.3
-m1_liver_Variants.csv,gDNA,m1,liver,23.24
-m1_kidney_lung.csv,gDNA,m1,lung,10.01
