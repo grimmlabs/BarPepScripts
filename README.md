@@ -13,9 +13,7 @@ A. [BarPepDetection](#barpepdetection)
 2. [Prepare your Input Files](#prepare-your-input-files)
     - [For Barcode Detection](#for-barcode-detection)
     - [For Peptide Detection](#for-peptide-detection)
-3. [Running the Script](#running-the-script)
-    - [Example for Barcode Detection](#example-for-barcode-detection)
-    - [Example for Peptide Detection](#example-for-peptide-detection)
+3. [Arguments](#arguments)
 4. [The Output Files](#the-output-files)
     - [For Barcode Detection](#for-barcode-detection-1)
     - [For Peptide Detection](#for-peptide-detection-1)
@@ -24,10 +22,8 @@ B. [BarPepAnalysis](#barpepanalysis)
 1. [Prepare your Input Files](#prepare-your-input-files)
     - [For Barcode Analysis](#for-barcode-analysis)
     - [For Peptide Analysis](#for-peptide-analysis)
-2. [Running the Script](#running-the-script)
-    - [Example for Barcode Analysis](#example-for-barcode-analysis)
-    - [Example for Peptide Analysis](#example-for-peptide-analysis)
-3. [The Output Files](#the-output-files)
+2. [Arguments](#arguments)
+3. [Output Files](#output-files)
     - [For Barcode Analysis](#for-barcode-analysis-1)
     - [For Peptide Analysis](#for-peptide-analysis-1) 
 
@@ -90,7 +86,7 @@ If you want to use the script to detect peptide insertions, you will only need t
 
  &emsp;
 
-## Running the Script
+## Arguments
 
  &emsp;
 
@@ -153,7 +149,7 @@ By default, the script searches for the barcode or peptide sequence over the com
 
 &emsp;
 
-## The Output Files
+## Output Files
 ### _For Barcode Detection_
 Running the script in barcode detection mode will generate at least 3 different output files per gz input file.
 
@@ -255,7 +251,7 @@ Other input files that you will need, but won't have to be specially prepared:
 
 &emsp;
 
-## Running the Script
+## Arguments
 If you are running the script for the first time, open the Windows Terminal and call the script with 
 ```
 python BarPepDetection.py -h
@@ -310,7 +306,7 @@ You can specify the number of peptide sequences shown in the output files. The d
 
 &emsp;
 
-## The Output Files
+## Output Files
 ### _For Barcode Analysis_
 Running the script in barcode analysis mode will generate at least 4 output CSV files.
 
