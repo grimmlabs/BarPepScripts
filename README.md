@@ -39,6 +39,7 @@ These commands wil get you going in running the scripts on the provided example 
 
 ```
 # Detection
+mkdir example_output
 python BarPepDetection.py -a BC -v example_data/variants.txt -d example_data/raw_reads/ -o example_output/ -l GGCCCA -r CCAGCC
 
 # Analysis
