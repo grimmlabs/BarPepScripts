@@ -13,7 +13,7 @@ A. [BarPepDetection](#barpepdetection)
 2. [Prepare your Input Files](#prepare-your-input-files)
     - [For Barcode Detection](#for-barcode-detection)
     - [For Peptide Detection](#for-peptide-detection)
-3. [Arguments](#arguments)
+3. [BarPepDetection Arguments](#barpepdetection-arguments)
 4. [The Output Files](#the-output-files)
     - [For Barcode Detection](#for-barcode-detection-1)
     - [For Peptide Detection](#for-peptide-detection-1)
@@ -22,7 +22,7 @@ B. [BarPepAnalysis](#barpepanalysis)
 1. [Prepare your Input Files](#prepare-your-input-files)
     - [For Barcode Analysis](#for-barcode-analysis)
     - [For Peptide Analysis](#for-peptide-analysis)
-2. [Arguments](#arguments)
+2. [BarPepAnalysis Arguments](#barpepanalysis-arguments)
 3. [Output Files](#output-files)
     - [For Barcode Analysis](#for-barcode-analysis-1)
     - [For Peptide Analysis](#for-peptide-analysis-1) 
@@ -86,7 +86,7 @@ If you want to use the script to detect peptide insertions, you will only need t
 
  &emsp;
 
-## Arguments
+## BarPepDetection Arguments
 
  &emsp;
 
@@ -251,7 +251,7 @@ Other input files that you will need, but won't have to be specially prepared:
 
 &emsp;
 
-## Arguments
+## BarPepAnalysis Arguments
 If you are running the script for the first time, open the Windows Terminal and call the script with 
 ```
 python BarPepDetection.py -h
