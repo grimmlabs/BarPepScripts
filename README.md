@@ -5,6 +5,9 @@ This repository provides an updated combined version of the [Barcode Detection S
 &emsp;
 
 # Table of Contents
+
+[Quick Tutorial](#quick-tutorial)
+
 A. [BarPepDetection](#barpepdetection)
 1. [Requirements](#requirements)
 2. [Prepare your Input Files](#prepare-your-input-files)
@@ -30,12 +33,26 @@ B. [BarPepAnalysis](#barpepanalysis)
 
 &emsp;
 
+# Quick Tutorial
+
+These commands wil get you going in running the scripts on the provided example data set.
+
+```
+# Detection
+python BarPepDetection.py -a BC -v example_data/variants.txt -d example_data/raw_reads/ -o example_output/ -l GGCCCA -r CCAGCC
+
+# Analysis
+python BarPepAnalysis.py -a BC -i example_data/assignment_file_for_analysis.csv -l example_output/m1_input_Variants.csv -d example_output/ -x
+```
+
 # BarPepDetection
 
 In principle the detection of barcode or peptide variants works by identifying user-supplied flanking regions within every input read in fastq format. The output consists of the count of each barcode or peptide variant for every input file.
 
 ## Requirements
-To run this script, you have to have Python 3 (version used to test this script: 3.12.3) installed on your computer. Additionally, the following modules should be installed (the script was tested with the indicated versions):
+
+Python3 (version used to test this script: 3.12.3) with these modules is required for running:
+
 - Biopython (1.83)
 - Numpy (1.26.4)
 - Pandas (2.2.2)
@@ -49,7 +66,7 @@ To run this script, you have to have Python 3 (version used to test this script:
 ## Prepare your Input Files
 ### _For Barcode Detection_
 If you want to use the script to detect barcode sequences, you will need the following input files:
-- **A folder containing your sequencing data (gz files).** It would be best if you already rename the files and give them a distinct name, e.g. _Sample1.txt.gz_, _Sample2.txt.gz_ or _M1_heart_cDNA.txt.gz_, _M2_liver_gDNA.txt.gz_ etc.
+- **A folder containing your sequencing data (gunzipped files).** It would be best if you already rename the files and give them a distinct name, e.g. _Sample1.txt.gz_, _Sample2.txt.gz_ or _M1_heart_cDNA.txt.gz_, _M2_liver_gDNA.txt.gz_ etc.
 - **A tab-delimited text file "Variants.txt"** that includes your barcode sequences and the respective variants, e.g:
 
     > AGACTCGTTGTATAT&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;AAV1  
@@ -68,7 +85,7 @@ If you want to use the script to detect barcode sequences, you will need the fol
 
 ### _For Peptide Detection_
 If you want to use the script to detect peptide insertions, you will only need the following input:
-- **A folder containing your sequencing data (gz files).** It would be best if you already rename the files and give them a distinct name, e.g. _Sample1.txt.gz_, _Sample2.txt.gz_ or _M1_heart_cDNA.txt.gz_, _M2_liver_gDNA.txt.gz_ etc.
+- **A folder containing your sequencing data (gz files).** It is best practice to give your files a distinct name, e.g. _Sample1.txt.gz_, _Sample2.txt.gz_ or _M1_heart_cDNA.txt.gz_, _M2_liver_gDNA.txt.gz_ etc.
 
  &emsp;
 
@@ -100,7 +117,6 @@ Give the short flanking oligo sequence at 3' of the barcode/peptide location.
 Give the position of the first expected barcode/peptide nucleotide if the read numbering starts with 0.
 - **-m BCVMARGIN:**  
 Give the number of nucleotides before and after BCV_loc to search for the barcode/peptide.
-
 - **-k BCVLOCREVCOMP:**  
 Give the position of the first expected barcode/peptide nucleotide on the reverse complement strand if the read numbering starts with 0.
 
@@ -132,27 +148,9 @@ Give the length of the peptide sequence. This argument is required for peptide d
 
 &emsp;
 
-By default, the script searches for the barcode or peptide sequence over the complete length of the read. If you want to restrict the search to a specific margin, you need to specifiy the arguments BCVLOC, BCVMARGIN, and BCVLOCREVCOMP.
+By default, the script searches for the barcode or peptide sequence over the complete length of the read. If you want to restrict the search to a specific margin, you need to specifiy the arguments BCVLOC, BCVMARGIN, and BCVLOCREVCOMP. These arguments restrict the search for the flanking regions to a given area within all reads, which marginally improves the performance.
 
 &emsp;
-
-### _Example for Barcode Detection_
-Here is an example on how to run the script for barcode detection:
-```
-python BarPepDetection.py -a BC -v ./Input/Variants.txt -c ./Input/Contaminations.txt -d ./Input/ -o ./Output/ -l ATGCTC -r CAGGGT -n 45 -m 5 -k 58 -p
-```
-In this example, the barcode will be searched for within the specified search-window. Moreover, the sequencing data will be checked for contaminations and a pdf file with plots showing the sequencing quality will be generated.
-
- &emsp;
-
-### _Example for Peptide Detection_
-Here is an example on how to run the script for peptide detection:
-```
-python BarPepDetection.py -a PV -d ./Input/ -o ./Output/ -l TCCAGGGCCAG -r GCCCAGG -s 27 -w
- ```
-In this example, the search for the peptide sequences will not be limited to a specified window. Moreover, the pdf file with the plots will not be generated and printouts in the terminal will be avoided.
-  
- &emsp;
 
 ## The Output Files
 ### _For Barcode Detection_
@@ -305,26 +303,6 @@ Set this flag if you want to show the script's version number and exit.
 
 - **-t TOPNUMBER:**  
 You can specify the number of peptide sequences shown in the output files. The default is set to 100, i.e., the output will be limited to the top 100 ranking peptide sequences.
-
-&emsp;
-
-### _Example for Barcode Analysis_  
-
-Here is an example on how to run the script for barcode analysis:
-```
-python BarPepAnalysis.py -a BC -i ./Input/Inputfile.csv -l ./Input/Data/Input_Library_Variants.csv -d ./Input/Data/ -x
-```
-In this example, the V<sub>αβ</sub> and T<sub>αβ</sub> values will be computed and the output files will be saved in an automatically generated folder 'BarcodeAnalysis_Results' that is saved in the directory with the input files.
-
-&emsp;
-
-### _Example for Peptide Analysis_
-
-Here is an example on how to run the script for peptide analysis:
-```
-python BarPepAnalysis.py -a PV -i ./Input/Inputfile.csv -d ./Input/Data/ -o ./Output/ -t 30 -w
-```
-In this example, the top 30 ranking peptide sequences will be shown in the output files which will be saved in the specified directory. Moreover, printouts in the terminal will be avoided.
 
 &emsp;
 

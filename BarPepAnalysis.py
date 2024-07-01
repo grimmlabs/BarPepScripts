@@ -37,12 +37,12 @@ peptide = ap.add_argument_group("Additional Arguments for Peptide Analysis")
 
 # Add arguments to argument groups
 required.add_argument("-a", "--mode", required = True, choices=["BC", "PV"], help = "Which mode do you want to run the script in? Type 'BC' for barcode analysis or 'PV' for peptide analysis.")
-required.add_argument("-i'", "--inputfile", required = True, help = "Path to your input CSV file containing the file names, animal, and tissue (+ for BC analysis sample type and weight_variable).")
+required.add_argument("-i", "--inputfile", required = True, help = "Path to your input CSV file containing the file names, animal, and tissue (+ for BC analysis sample type and weight_variable).")
 required.add_argument("-d", "--directory", required = True, help = "Path to the directory containing the output CSV files from the Detection Script.")
 optional.add_argument("-o", "--outputdir", required=False, help="Path to the directory where the output files should be saved. If not specified, a new folder in the directory with the input data will be automatically created for the output files.")
 optional.add_argument("-w", "--silence", action="store_false", help="Set flag to avoid printouts in the terminal.")
 optional.add_argument("-z" "--version", action="version", version="\n"*5+"====== Barcode & Peptide Analysis Script 2.0 (written by E. Locke) ======\n\n", help="Set flag if you want to print script's version number and exit.")
-optional.add_argument("-p", "--pseudo", type=float, default=1e-6, help="Pseudocount to be added to columns containing zeroes.")
+optional.add_argument("-p", "--pseudo", type=float, default=1e-6, help="Pseudocount to be added to columns containing zeroes. Default 1e-6.")
 barcode.add_argument("-l", "--libraryNorm", required = False, help = "Path to the output CSV file of the input library from the Detection Script.")
 barcode.add_argument("-x", "--extraNorm", action="store_true", help="Set flag to compute the V_αβ and T_αβ values.")
 peptide.add_argument("-t", "--topNumber", required=False, type = int, default = 100, help="Number of peptide sequences you want to limit the output to. Default is set to 100.")
@@ -229,7 +229,7 @@ if args.mode == "BC":
 
         # Extract the corresponding rows from inputfile
         for idx, row in inputfile.iterrows():
-            if f"{row["Animal"]}_{row["SampleType"]}" == key:
+            if f"{row['Animal']}_{row['SampleType']}" == key:
                 new_row[row["Tissue"]] = row["weight_variable"]
 
         # Convert the new row to a DataFrame
