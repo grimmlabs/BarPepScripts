@@ -42,12 +42,7 @@ python BarPepDetection.py -a BC -v example_data/variants.txt -d example_data/raw
 # Analysis
 python BarPepAnalysis.py -a BC -i example_data/assignment_file_for_analysis.csv -l example_output/m1_input_Variants.csv -d example_output/ -x
 ```
-
-# BarPepDetection
-
-In principle the detection of barcode or peptide variants works by identifying user-supplied flanking regions within every input read in fastq format. The output consists of the count of each barcode or peptide variant for every input file.
-
-## Requirements
+# Requirements
 
 Python3 (version used to test this script: 3.12.3) with these modules is required for running:
 
@@ -60,6 +55,10 @@ Python3 (version used to test this script: 3.12.3) with these modules is require
 **Note:** Especially for the pandas module, it is important that you use the indicated version! The script might not work with older or newer versions of pandas.
   
 &emsp;
+
+# BarPepDetection
+
+In principle the detection of barcode or peptide variants works by identifying user-supplied flanking regions within every input read in fastq format. The output consists of the count of each barcode or peptide variant for every input file.
 
 ## Prepare your Input Files
 ### _For Barcode Detection_
