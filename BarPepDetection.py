@@ -14,7 +14,7 @@
 
 import os
 import matplotlib.pyplot as plt
-from Bio import SeqIO
+from Bio import SeqIO, Seq
 from gzip import open as gzopen
 from matplotlib.backends.backend_pdf import PdfPages
 import numpy as np
@@ -23,6 +23,7 @@ import matplotlib.patches as patches
 import seaborn as sns
 import argparse
 import timeit
+import copy
 
 
 
@@ -72,211 +73,105 @@ if silence:
 #_________________________________________DEFINITION OF REQUIRED FUNCTIONS__________________________________________________
 #
 
-# Function gives the reverse complement of a DNA sequence
-def reverse_complement(seq):
-    complement_dict = {"A": "T", "C": "G", "G": "C", "T": "A"}
-
-    bases = list(seq)
-    letters = [complement_dict.get(base, base) for base in bases]
-
-    complement_seq = "".join(letters)
-    result = complement_seq[::-1]
-    return result
-
-
 # Function creates a box plot showing the per base sequence quality.
-def plot_base_qualities(my_dir, filename, ax=None, limit=100000, gzipped=True):
+def plot_base_qualities(file, ax=None, limit=100000):
     start = timeit.default_timer()
+    res=[]
+    c=0
+    #Extract the phred score for each base and save it in a data frame
+    for record in SeqIO.parse(file, "fastq"):
+        score=record.letter_annotations["phred_quality"]
+        res.append(score)
+        c+=1
+        if c>limit:
+            break
+    df = pd.DataFrame(res)
+    l = len(df.T)+1
 
-    #Read the sequences from the file
-    if gzipped:
-        with gzopen(os.path.join(my_dir, filename), "rt") as fastq_parser:
-            res=[]
-            c=0
+    #Create the box plot
+    if ax==None:
+        f,ax=plt.subplots(figsize=(12,5))
+    rect = patches.Rectangle((0,0),l,20,linewidth=0,facecolor="r",alpha=.4)
+    ax.add_patch(rect)
+    rect = patches.Rectangle((0,20),l,8,linewidth=0,facecolor="yellow",alpha=.4)
+    ax.add_patch(rect)
+    rect = patches.Rectangle((0,28),l,12,linewidth=0,facecolor="g",alpha=.4)
+    ax.add_patch(rect)
+    df.mean().plot(ax=ax,c="black")
+    boxprops = dict(linestyle='-', linewidth=1, color="black")
+    df.plot(kind="box", ax=ax, grid=False, showfliers=False,
+            color=dict(boxes="black",whiskers="black")  )
+    ax.set_xticks(np.arange(0, l, 5))
+    ax.set_xticklabels(np.arange(0, l, 5))
+    ax.set_xlabel("Position [bp]")
+    ax.set_ylabel("Phred Score")
+    ax.set_xlim((0,l))
+    ax.set_ylim((0,40))
+    ax.set_title("Per Base Sequence Quality for "+filename.split(".")[0])
 
-            #Extract the phred score for each base and save it in a data frame
-            for record in SeqIO.parse(fastq_parser, "fastq"):
-                score=record.letter_annotations["phred_quality"]
-                res.append(score)
-                c+=1
-                if c>limit:
-                    break
-            df = pd.DataFrame(res)
-            l = len(df.T)+1
+    stop = timeit.default_timer()
+    if silence:
+        print("\nTime for Per Base Sequence Quality Plot: ", stop - start)
+    return
 
-            #Create the box plot
-            if ax==None:
-                f,ax=plt.subplots(figsize=(12,5))
-            rect = patches.Rectangle((0,0),l,20,linewidth=0,facecolor="r",alpha=.4)
-            ax.add_patch(rect)
-            rect = patches.Rectangle((0,20),l,8,linewidth=0,facecolor="yellow",alpha=.4)
-            ax.add_patch(rect)
-            rect = patches.Rectangle((0,28),l,12,linewidth=0,facecolor="g",alpha=.4)
-            ax.add_patch(rect)
-            df.mean().plot(ax=ax,c="black")
-            boxprops = dict(linestyle='-', linewidth=1, color="black")
-            df.plot(kind="box", ax=ax, grid=False, showfliers=False,
-                    color=dict(boxes="black",whiskers="black")  )
-            ax.set_xticks(np.arange(0, l, 5))
-            ax.set_xticklabels(np.arange(0, l, 5))
-            ax.set_xlabel("Position [bp]")
-            ax.set_ylabel("Phred Score")
-            ax.set_xlim((0,l))
-            ax.set_ylim((0,40))
-            ax.set_title("Per Base Sequence Quality for "+filename.split(".")[0])
-
-            stop = timeit.default_timer()
-            if silence:
-                print("\nTime for Per Base Sequence Quality Plot: ", stop - start)
-            return
-    else:
-        res=[]
-        c=0
-
-        #Extract the phred score for each base and save it in a data frame
-        for record in SeqIO.parse(os.path.join(my_dir, filename), "fastq"):
-            score=record.letter_annotations["phred_quality"]
-            res.append(score)
-            c+=1
-            if c>limit:
-                break
-        df = pd.DataFrame(res)
-        l = len(df.T)+1
-
-        #Create the box plot
-        if ax==None:
-            f,ax=plt.subplots(figsize=(12,5))
-        rect = patches.Rectangle((0,0),l,20,linewidth=0,facecolor="r",alpha=.4)
-        ax.add_patch(rect)
-        rect = patches.Rectangle((0,20),l,8,linewidth=0,facecolor="yellow",alpha=.4)
-        ax.add_patch(rect)
-        rect = patches.Rectangle((0,28),l,12,linewidth=0,facecolor="g",alpha=.4)
-        ax.add_patch(rect)
-        df.mean().plot(ax=ax,c="black")
-        boxprops = dict(linestyle='-', linewidth=1, color="black")
-        df.plot(kind="box", ax=ax, grid=False, showfliers=False,
-                color=dict(boxes="black",whiskers="black")  )
-        ax.set_xticks(np.arange(0, l, 5))
-        ax.set_xticklabels(np.arange(0, l, 5))
-        ax.set_xlabel("Position [bp]")
-        ax.set_ylabel("Phred Score")
-        ax.set_xlim((0,l))
-        ax.set_ylim((0,40))
-        ax.set_title("Per Base Sequence Quality for "+filename.split(".")[0])
-
-        stop = timeit.default_timer()
-        if silence:
-            print("\nTime for Per Base Sequence Quality Plot: ", stop - start)
-        return
 
 
 # Function creates a histogram plot showing the per sequence quality scores
-def plot_seq_qualities(my_dir, filename, limit=100000, gzipped=True):
+def plot_seq_qualities(file, limit=100000):
     start = timeit.default_timer()
 
-    #Read the sequences from the file
-    if gzipped:
-        with gzopen(os.path.join(my_dir, filename), "rt") as fastq_parser:
-            mean_scores=[]
-            c=0
+    mean_scores=[]
+    c=0
 
-            #Get the mean phred score for each sequence and save in a data frame
-            for record in SeqIO.parse(fastq_parser, "fastq"):
-                score=record.letter_annotations["phred_quality"]
-                mean_scores.append(np.mean(score))
-                c+=1
-                if c>limit:
-                    break
-            df=pd.DataFrame(mean_scores)
+    #Get the mean phred score for each sequence and save in a data frame
+    for record in SeqIO.parse(file, "fastq"):
+        score=record.letter_annotations["phred_quality"]
+        mean_scores.append(np.mean(score))
+        c+=1
+        if c>limit:
+            break
+    df=pd.DataFrame(mean_scores)
 
-            #Create the histogram plot
-            ax=sns.histplot(data=df[0], bins = 35, color="darkblue", edgecolor="darkblue", kde=True, legend=False)
-            ax.lines[0].set_color("black")
-            ax.set(xlabel="Mean Sequence Quality [Phred Score]")
-            ax.set_title("Per Sequence Quality for "+filename.split(".")[0])
+    #Create the histogram plot
+    ax=sns.histplot(data=df[0], bins = 35, color="darkblue", edgecolor="darkblue", kde=True, legend=False)
+    ax.lines[0].set_color("black")
+    ax.set(xlabel="Mean Sequence Quality [Phred Score]")
+    ax.set_title("Per Sequence Quality for "+filename.split(".")[0])
 
-            stop = timeit.default_timer()
-            if silence:
-                print("\nTime for Per Sequence Quality Plot: ", stop - start)
-            return
-    else:
-        mean_scores=[]
-        c=0
-
-        #Get the mean phred score for each sequence and save in a data frame
-        for record in SeqIO.parse(os.path.join(my_dir, filename), "fastq"):
-            score=record.letter_annotations["phred_quality"]
-            mean_scores.append(np.mean(score))
-            c+=1
-            if c>limit:
-                break
-        df=pd.DataFrame(mean_scores)
-
-        #Create the histogram plot
-        ax=sns.histplot(data=df[0], bins = 35, color="darkblue", edgecolor="darkblue", kde=True, legend=False)
-        ax.lines[0].set_color("black")
-        ax.set(xlabel="Mean Sequence Quality [Phred Score]")
-        ax.set_title("Per Sequence Quality for "+filename.split(".")[0])
-
-        stop = timeit.default_timer()
-        if silence:
-            print("\nTime for Per Sequence Quality Plot: ", stop - start)
-        return
+    stop = timeit.default_timer()
+    if silence:
+        print("\nTime for Per Sequence Quality Plot: ", stop - start)
+    return
 
 
 # Function creates a histogram plot showing the sequence length distribution.
-def plot_seq_length_dist(my_dir, filename, limit=100000, gzipped=True):
+def plot_seq_length_dist(file, limit=100000):
     start = timeit.default_timer()
+    c=0
+    sizes=[]
 
-    #Read the sequences from the file
-    if gzipped:
-        with gzopen(os.path.join(my_dir, filename), "rt") as records:
-            c=0
-            sizes=[]
+    #Extract the length of the sequences
+    for record in SeqIO.parse(file, "fastq"):
+        sizes.append(len(record))
+        c+=1
+        if c>limit:
+            break
 
-            #Extract the length of the sequences
-            for record in SeqIO.parse(records, "fastq"):
-                sizes.append(len(record))
-                c+=1
-                if c>limit:
-                    break
+    #Create a histogram
+    plt.hist(sizes, color="darkblue", edgecolor="black")
+    plt.title("Sequence Length Distribution for "+filename.split(".")[0])
+    plt.xlabel("Sequence Length [bp]")
+    plt.ylabel("Count")
+    plt.xticks(np.arange(min(sizes)-2, max(sizes)+3, 1.0))
 
-            #Create a histogram
-            plt.hist(sizes, color="darkblue", edgecolor="black")
-            plt.title("Sequence Length Distribution for "+filename.split(".")[0])
-            plt.xlabel("Sequence Length [bp]")
-            plt.ylabel("Count")
-            plt.xticks(np.arange(min(sizes)-2, max(sizes)+3, 1.0))
-
-            stop = timeit.default_timer()
-            if silence:
-                print("\nTime for Sequence Length Distribution Plot: ", stop - start)
-            return
-    else:
-        c=0
-        sizes=[]
-        #Extract the length of the sequences
-        for record in SeqIO.parse(os.path.join(my_dir, filename), "fastq"):
-            sizes.append(len(record))
-            c+=1
-            if c>limit:
-                break
-
-        #Create a histogram
-        plt.hist(sizes, color="darkblue", edgecolor="black")
-        plt.title("Sequence Length Distribution for "+filename.split(".")[0])
-        plt.xlabel("Sequence Length [bp]")
-        plt.ylabel("Count")
-        plt.xticks(np.arange(min(sizes)-2, max(sizes)+3, 1.0))
-
-        stop = timeit.default_timer()
-        if silence:
-            print("\nTime for Sequence Length Distribution Plot: ", stop - start)
-        return
+    stop = timeit.default_timer()
+    if silence:
+        print("\nTime for Sequence Length Distribution Plot: ", stop - start)
+    return
 
 
 # Function creates a plot showing the per base sequence content
-def plot_base_seq_content(my_dir, filename, limit=100000, gzipped=True):
+def plot_base_seq_content(file, limit=100000):
     start = timeit.default_timer()
     c=0
 
@@ -288,39 +183,23 @@ def plot_base_seq_content(my_dir, filename, limit=100000, gzipped=True):
     base_counts = {"A": [], "T": [], "G": [], "C": []}
 
     # Open the file and iterate through the sequences to gather all necessary information
-    if gzipped:
-        with gzopen(os.path.join(my_dir, filename), "rt") as handle:
-            for seq in SeqIO.parse(handle, format="fastq"):
-                seq_len = len(seq)
-                total_sequences += 1
-                total_bases.append(seq_len)
 
-                if seq_len > len(base_counts["A"]):
-                    for key in base_counts:
-                        base_counts[key].extend([0] * (seq_len - len(base_counts[key])))
+    for seq in SeqIO.parse(file, format="fastq"):
+        seq_len = len(seq)
+        total_sequences += 1
+        total_bases.append(seq_len)
 
-                for pos, base in enumerate(seq):
-                    if base in base_counts:
-                        base_counts[base][pos] += 1
-                c+=1
-                if c>limit:
-                    break
-    else:
-        for seq in SeqIO.parse(os.path.join(my_dir, filename), format="fastq"):
-            seq_len = len(seq)
-            total_sequences += 1
-            total_bases.append(seq_len)
+        if seq_len > len(base_counts["A"]):
+            for key in base_counts:
+                base_counts[key].extend([0] * (seq_len - len(base_counts[key])))
 
-            if seq_len > len(base_counts["A"]):
-                for key in base_counts:
-                    base_counts[key].extend([0] * (seq_len - len(base_counts[key])))
+        for pos, base in enumerate(seq):
+            if base in base_counts:
+                base_counts[base][pos] += 1
+        c+=1
+        if c>limit:
+            break
 
-            for pos, base in enumerate(seq):
-                if base in base_counts:
-                    base_counts[base][pos] += 1
-            c+=1
-            if c>limit:
-                break
 
     # Calculate mean bases
     mean_bases = int(np.mean(total_bases))
@@ -352,27 +231,47 @@ def plot_base_seq_content(my_dir, filename, limit=100000, gzipped=True):
 
 
 # Function generates plots using the above-defined functions and saves them on separate pages in a pdf-file
-def generate_plots(my_dir, filename, out_dir, input_gzipped):
+def generate_plots(my_dir, filename, out_dir, gzipped):
+    # make output directory
     plot_dir = os.path.join(out_dir, "quality_plots")
     if not os.path.exists(plot_dir):
         os.mkdir(plot_dir)
+
+    file = os.path.join(my_dir, filename)
+
+    # Plot
+    """
+    There is a weird interaction of gzopen and SeqIO.parse. Workaround below reopens the file for every plot.
+    """
     with PdfPages(os.path.join(plot_dir, filename).split(".")[0]+"_Plots.pdf") as pdf:
-        plot_base_qualities(my_dir, filename, gzipped=input_gzipped)
+        # reload file
+        if gzipped:
+            file = gzopen(os.path.join(my_dir, filename), "rt")
+        plot_base_qualities(file)
         pdf.savefig()
         plt.close()
         if silence:
             print("Per Base Sequence Quality Plot generated.")
-        plot_seq_qualities(my_dir, filename, gzipped=input_gzipped)
+        # reload file
+        if gzipped:
+            file = gzopen(os.path.join(my_dir, filename), "rt")
+        plot_seq_qualities(file)
         pdf.savefig()
         plt.close()
         if silence:
             print("Per Sequence Quality Plot generated.")
-        plot_base_seq_content(my_dir, filename, gzipped=input_gzipped)
+        # reload file
+        if gzipped:
+            file = gzopen(os.path.join(my_dir, filename), "rt")
+        plot_base_seq_content(file)
         pdf.savefig()
         plt.close()
         if silence:
             print("Sequence Content across all Bases Plot generated.")
-        plot_seq_length_dist(my_dir, filename, gzipped=input_gzipped)
+        # reload file
+        if gzipped:
+            file = gzopen(os.path.join(my_dir, filename), "rt")
+        plot_seq_length_dist(file)
         pdf.savefig()
         plt.close()
         if silence:
@@ -380,40 +279,20 @@ def generate_plots(my_dir, filename, out_dir, input_gzipped):
 
 
 # Function computes the mean quality of all sequences in a fastq-file
-def calculate_mean_quality(my_dir, filename, limit=100000, gzipped=True):
+def calculate_mean_quality(file, limit=100000, gzipped=True):
+    mean_scores=[]
+    c=0
+    #Get the mean phred score for each sequence and save in a list
+    for record in SeqIO.parse(file, "fastq"):
+        score=record.letter_annotations["phred_quality"]
+        mean_scores.append(np.mean(score))
+        c+=1
+        if c>limit:
+            break
 
-    #Read the sequences from the file
-    if gzipped:
-        with gzopen(os.path.join(my_dir, filename), "rt") as fastq_parser:
-            mean_scores=[]
-            c=0
-
-            #Get the mean phred score for each sequence and save in a list
-            for record in SeqIO.parse(fastq_parser, "fastq"):
-                score=record.letter_annotations["phred_quality"]
-                mean_scores.append(np.mean(score))
-                c+=1
-                if c>limit:
-                    break
-
-            # Calculate mean quality
-            mean_quality =  np.mean(mean_scores)
-            return mean_quality
-    else:
-        mean_scores=[]
-        c=0
-
-        #Get the mean phred score for each sequence and save in a list
-        for record in SeqIO.parse(os.path.join(my_dir, filename), "fastq"):
-            score=record.letter_annotations["phred_quality"]
-            mean_scores.append(np.mean(score))
-            c+=1
-            if c>limit:
-                break
-
-        # Calculate mean quality
-        mean_quality =  np.mean(mean_scores)
-        return mean_quality
+    # Calculate mean quality
+    mean_quality =  np.mean(mean_scores)
+    return mean_quality
 
 # Function for detection of barcodes, counting of total reads and reads without constant region, and calculation of sequence length
 def barcode_detection(reads, BCV_left, BCV_right, BCV_left_revcomp, BCV_right_revcomp, BCV_size):
@@ -524,8 +403,8 @@ BCV_left = args.BCVleft.upper()
 BCV_right = args.BCVright.upper()
 BCV_loc = args.BCVloc
 BCV_margin = args.BCVmargin
-BCV_left_revcomp = reverse_complement(BCV_right).upper()
-BCV_right_revcomp = reverse_complement(BCV_left).upper()
+BCV_left_revcomp = str(Seq.Seq(BCV_right).reverse_complement()).upper()
+BCV_right_revcomp = str(Seq.Seq(BCV_left).reverse_complement()).upper()
 BCV_loc_revcomp = args.BCVlocrevcomp
 BCV_size = args.BCVsize
 
@@ -588,76 +467,44 @@ if args.mode == "BC":
             print(gz_file)
 
 
-    # Each file in the directory is checked
+    # iterate through directory
     for filename in objects:
 
+        start = timeit.default_timer()
+
+        if silence:
+            print("\n"*10+"Sample being processed: %s" %filename)
+
+        # Sequencing quality data plots are generated if the user asked for them.
+        if args.plots:
+            # The function generate_plots is called and plots are generated and saved in a pdf-file.
+            generate_plots(my_dir, filename, out_dir, input_files_gzipped)
+
         # The file is processed if it is a gz-file.
-        if filename.endswith('gz'):
-            start = timeit.default_timer()
-            if silence:
-                print("\n"*10+"Sample being processed: %s" %filename)
-
-            # The file is opened
-            with gzopen(os.path.join(my_dir, filename), "rt") as reads:
-
-                # Sequencing quality data plots are generated if the user asked for them.
-                if args.plots:
-
-                    # The function generate_plots is called and plots are generated and saved in a pdf-file.
-                    generate_plots(my_dir, filename, out_dir, input_files_gzipped)
-
-                # Length of the barcode is determined
-                BCV_size=len(list(variants.keys())[0])
-                if silence:
-                    print("Searching for barcodes...")
-
-                # If the user did not specify the arguments for a defined search window, the defualt barcode detection function is called
-                if not BCV_loc or not BCV_margin or not BCV_loc_revcomp:
-                    barcode_calc, read_count, no_constant_region, size = barcode_detection(reads, BCV_left, BCV_right, BCV_left_revcomp, BCV_right_revcomp, BCV_size)
-
-                # If the user specified the arguments required to search for the barcode in a defined window, the respective barcode detection method is called
-                else:
-                    barcode_calc, read_count, no_constant_region, size = barcode_detection_margin(reads, BCV_left, BCV_right, BCV_loc, BCV_margin, BCV_left_revcomp, BCV_right_revcomp, BCV_loc_revcomp, BCV_size)
-
-                # Mean size and mean quality are calculated
-                mean_size = int(np.mean(size))
-                mean_quality = calculate_mean_quality(my_dir, filename, gzipped=input_files_gzipped)
-
-
-        # check if it is a fastq file
-        elif filename.endswith('fastq'):
-            start = timeit.default_timer()
-            if silence:
-                print("\n"*10+"Sample being processed: %s" %filename)
-
+        if input_files_gzipped:
+            reads = gzopen(os.path.join(my_dir, filename), "rt")
+        else:
             reads = os.path.join(my_dir, filename)
 
-            # Sequencing quality data plots are generated if the user asked for them.
-            if args.plots:
+        # Length of the barcode is determined
+        BCV_size=len(list(variants.keys())[0])
+        if silence:
+            print("Searching for barcodes...")
 
-                # The function generate_plots is called and plots are generated and saved in a pdf-file.
-                generate_plots(my_dir, filename, out_dir, input_files_gzipped)
+        # If the user did not specify the arguments for a defined search window, the default barcode detection function is called
+        if not BCV_loc or not BCV_margin or not BCV_loc_revcomp:
+            barcode_calc, read_count, no_constant_region, size = barcode_detection(reads, BCV_left, BCV_right, BCV_left_revcomp, BCV_right_revcomp, BCV_size)
 
-            # Length of the barcode is determined
-            BCV_size=len(list(variants.keys())[0])
-            if silence:
-                print("Searching for barcodes...")
-
-            # If the user did not specify the arguments for a defined search window, the defualt barcode detection function is called
-            if not BCV_loc or not BCV_margin or not BCV_loc_revcomp:
-                barcode_calc, read_count, no_constant_region, size = barcode_detection(reads, BCV_left, BCV_right, BCV_left_revcomp, BCV_right_revcomp, BCV_size)
-
-            # If the user specified the arguments required to search for the barcode in a defined window, the respective barcode detection method is called
-            else:
-                barcode_calc, read_count, no_constant_region, size = barcode_detection_margin(reads, BCV_left, BCV_right, BCV_loc, BCV_margin, BCV_left_revcomp, BCV_right_revcomp, BCV_loc_revcomp, BCV_size)
-
-            # Mean size and mean quality are calculated
-            mean_size = int(np.mean(size))
-            mean_quality = calculate_mean_quality(my_dir, filename, gzipped=input_files_gzipped)
-
-        # If it is not a gz file, the file is skipped and the next file is checked
+        # If the user specified the arguments required to search for the barcode in a defined window, the respective barcode detection method is called
         else:
-            continue
+            barcode_calc, read_count, no_constant_region, size = barcode_detection_margin(reads, BCV_left, BCV_right, BCV_loc, BCV_margin, BCV_left_revcomp, BCV_right_revcomp, BCV_loc_revcomp, BCV_size)
+
+        # Mean size and mean quality are calculated
+        mean_size = int(np.mean(size))
+        if input_files_gzipped:
+            mean_quality = calculate_mean_quality(gzopen(os.path.join(my_dir, filename), "rt"))
+        else:
+            mean_quality = calculate_mean_quality(reads)
 
 
         # A DataFrame with the barcodes, assigned variants (expected or contaminating) and counts is created
@@ -779,72 +626,45 @@ if args.mode == "PV":
             print(gz_file)
 
 
-    # Each file in the directory is checked
+    # iterate through the directory
     for filename in objects:
+        start = timeit.default_timer()
 
-        # The file is processed if it is a gz-file.
-        if filename.endswith('gz'):
-            start = timeit.default_timer()
-            if silence:
-                print("\n"*10+"Sample being processed: %s" %filename)
+        if silence:
+            print("\n"*10+"Sample being processed: %s" %filename)
 
-            # The file is opened
-            with gzopen(os.path.join(my_dir, filename), "rt") as reads:
+        # Sequencing quality data plots are generated if the user asked for them.
+        if args.plots:
+            # The function generate_plots is called to generate the plots and save them in a pdf-file.
+            generate_plots(my_dir, filename, out_dir, input_files_gzipped)
 
-                # Sequencing quality data plots are generated if the user asked for them.
-                if args.plots:
-
-                    # The function generate_plots is called to generate the plots and save them in a pdf-file.
-                    generate_plots(my_dir, filename, out_dir)
-
-                # Files in directory are opened with Biopython SeqIO and the function for peptide detection is called
-                if silence:
-                    print("Searching for peptides...")
-
-                # If the user did not specify the arguments for a defined search window, the defualt peptide detection function is called
-                if not BCV_loc or not BCV_margin or not BCV_loc_revcomp:
-                    PV_calc, read_count, no_constant_region, size = barcode_detection(reads, BCV_left, BCV_right, BCV_left_revcomp, BCV_right_revcomp, BCV_size)
-
-                # If the user specified the arguments required to search for the peptide in a defined window, the respective peptide detection method is called
-                else:
-                    PV_calc, read_count, no_constant_region, size = barcode_detection_margin(reads, BCV_left, BCV_right, BCV_loc, BCV_margin, BCV_left_revcomp, BCV_right_revcomp, BCV_loc_revcomp, BCV_size)
-
-                # Mean size and mean quality are calculated
-                mean_size = int(np.mean(size))
-                mean_quality = calculate_mean_quality(my_dir, filename, gzipped=input_files_gzipped)
-
-        # if files are not zipped
-        elif filename.endswith('fastq'):
-            start = timeit.default_timer()
-            if silence:
-                print("\n"*10+"Sample being processed: %s" %filename)
-
-            reads = filename
-
-            # Sequencing quality data plots are generated if the user asked for them.
-            if args.plots:
-
-                # The function generate_plots is called to generate the plots and save them in a pdf-file.
-                generate_plots(my_dir, filename, out_dir)
-
-            # Files in directory are opened with Biopython SeqIO and the function for peptide detection is called
-            if silence:
-                print("Searching for peptides...")
-
-            # If the user did not specify the arguments for a defined search window, the defualt peptide detection function is called
-            if not BCV_loc or not BCV_margin or not BCV_loc_revcomp:
-                PV_calc, read_count, no_constant_region, size = barcode_detection(reads, BCV_left, BCV_right, BCV_left_revcomp, BCV_right_revcomp, BCV_size)
-
-            # If the user specified the arguments required to search for the peptide in a defined window, the respective peptide detection method is called
-            else:
-                PV_calc, read_count, no_constant_region, size = barcode_detection_margin(reads, BCV_left, BCV_right, BCV_loc, BCV_margin, BCV_left_revcomp, BCV_right_revcomp, BCV_loc_revcomp, BCV_size)
-
-            # Mean size and mean quality are calculated
-            mean_size = int(np.mean(size))
-            mean_quality = calculate_mean_quality(my_dir, filename, gzipped=input_files_gzipped)
-        # If it is not a gz file, the file is skipped and the next file is checked
+        # get input file
+        if input_files_gzipped:
+            reads = gzopen(os.path.join(my_dir, filename), "rt")
         else:
-            continue
+            reads = os.path.join(my_dir, filename)
+
+        # Files in directory are opened with Biopython SeqIO and the function for peptide detection is called
+        if silence:
+            print("Searching for peptides...")
+
+        # If the user did not specify the arguments for a defined search window, the defualt peptide detection function is called
+        if not BCV_loc or not BCV_margin or not BCV_loc_revcomp:
+            PV_calc, read_count, no_constant_region, size = barcode_detection(reads, BCV_left, BCV_right, BCV_left_revcomp, BCV_right_revcomp, BCV_size)
+
+        # If the user specified the arguments required to search for the peptide in a defined window, the respective peptide detection method is called
+        else:
+            PV_calc, read_count, no_constant_region, size = barcode_detection_margin(reads, BCV_left, BCV_right, BCV_loc, BCV_margin, BCV_left_revcomp, BCV_right_revcomp, BCV_loc_revcomp, BCV_size)
+
+        # Mean size and mean quality are calculated
+        mean_size = int(np.mean(size))
+        # Mean size and mean quality are calculated
+        mean_size = int(np.mean(size))
+        if input_files_gzipped:
+            mean_quality = calculate_mean_quality(gzopen(os.path.join(my_dir, filename), "rt"))
+        else:
+            mean_quality = calculate_mean_quality(reads)
+
 
 
         # A DataFrame with the peptide sequences and their counts is created
