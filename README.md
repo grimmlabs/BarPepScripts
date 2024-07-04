@@ -8,13 +8,14 @@ This repository provides an updated combined version of the [Barcode Detection S
 
 [Quick Tutorial](#quick-tutorial)
 
+[Requirements](#requirements)
+
 A. [BarPepDetection](#barpepdetection)
-1. [Requirements](#requirements)
-2. [Prepare your Input Files](#prepare-your-input-files)
+1. [Prepare your Input Files](#prepare-your-input-files)
     - [For Barcode Detection](#for-barcode-detection)
     - [For Peptide Detection](#for-peptide-detection)
-3. [BarPepDetection Arguments](#barpepdetection-arguments)
-4. [The Output Files](#the-output-files)
+2. [Arguments BarPepDetection](#arguments-barpepdetection)
+3. [Output Files BarPepDetection](#output-files-barpepdetection)
     - [For Barcode Detection](#for-barcode-detection-1)
     - [For Peptide Detection](#for-peptide-detection-1)
 
@@ -22,8 +23,8 @@ B. [BarPepAnalysis](#barpepanalysis)
 1. [Prepare your Input Files](#prepare-your-input-files)
     - [For Barcode Analysis](#for-barcode-analysis)
     - [For Peptide Analysis](#for-peptide-analysis)
-2. [BarPepAnalysis Arguments](#barpepanalysis-arguments)
-3. [Output Files](#output-files)
+2. [Arguments BarPepAnalysis](#arguments-barpepanalysis)
+3. [Output Files BarPepAnalysis](#output-files-barpepanalysis)
     - [For Barcode Analysis](#for-barcode-analysis-1)
     - [For Peptide Analysis](#for-peptide-analysis-1) 
 
