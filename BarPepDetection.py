@@ -54,7 +54,7 @@ optional.add_argument("-w", "--silence", action="store_false", help="Set flag to
 optional.add_argument("-z" "--version", action="version", version="\n"*5+"====== Barcode & Peptide Detection Script 1.5 (modified by J. Sippel, J. Weinmann, S. Weis, O. Maiakovska, and E. Locke) ======\n\n", help="Set flag if you want to print script's version number and exit.")
 barcode.add_argument("-v", "--variants", required=False, help="Give the path to the tab-delimited text file that includes unique barcode sequences assigned to one of the cap variants.")
 barcode.add_argument("-c", "--contaminations", required=False, help="If you want to check your sequencing data for contaminations, give the path to the tab-delimited text file that includes unique barcode sequences assigned to contaminating cap variants.")
-peptide.add_argument("-s", "--BCVsize", type=int, help="Give the length of the peptide sequence.")
+peptide.add_argument("-s", "--BCVsize", type=int, help="Give the length of the insert in nucleotides.")
 
 args = ap.parse_args()
 
