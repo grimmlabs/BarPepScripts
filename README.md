@@ -141,7 +141,7 @@ If you want to check your sequencing data for contaminations, give the path to t
 **<p style="font-size:15px;">Additional arguments for peptide detection:</p>**
 
 - **-s BCVSIZE:**  
-Give the length of the peptide sequence. This argument is required for peptide detection.  
+Give the length of the peptide sequence in nucleotides. This argument is required for peptide detection.  
 
 &emsp;
 
