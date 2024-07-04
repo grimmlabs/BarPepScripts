@@ -86,7 +86,7 @@ If you want to use the script to detect peptide insertions, you will only need t
 
  &emsp;
 
-## BarPepDetection Arguments
+## Arguments BarPepDetection
 
  &emsp;
 
@@ -149,7 +149,7 @@ By default, the script searches for the barcode or peptide sequence over the com
 
 &emsp;
 
-## Output Files
+## Output Files BarPepDetection
 ### _For Barcode Detection_
 Running the script in barcode detection mode will generate at least 3 different output files per gz input file.
 
@@ -251,7 +251,7 @@ Other input files that you will need, but won't have to be specially prepared:
 
 &emsp;
 
-## BarPepAnalysis Arguments
+## Arguments BarPepAnalysis
 If you are running the script for the first time, open the Windows Terminal and call the script with 
 ```
 python BarPepDetection.py -h
@@ -306,7 +306,7 @@ You can specify the number of peptide sequences shown in the output files. The d
 
 &emsp;
 
-## Output Files
+## Output Files BarPepAnalysis
 ### _For Barcode Analysis_
 Running the script in barcode analysis mode will generate at least 4 output CSV files.
 
