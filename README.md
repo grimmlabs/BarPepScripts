@@ -63,8 +63,8 @@ In principle the detection of barcode or peptide variants works by identifying u
 ## Prepare your Input Files
 ### _For Barcode Detection_
 If you want to use the script to detect barcode sequences, you will need the following input files:
-- **A folder containing your sequencing data (gunzipped files).** It would be best if you already rename the files and give them a distinct name, e.g. _Sample1.txt.gz_, _Sample2.txt.gz_ or _M1_heart_cDNA.txt.gz_, _M2_liver_gDNA.txt.gz_ etc.
-- **A tab-delimited text file "Variants.txt"** that includes your barcode sequences and the respective variants, e.g:
+- A folder containing **only** the raw input files in fastq format (either gunzipped or not). It would be best if you already rename the files and give them a distinct name, e.g. _Sample1.txt.gz_, _Sample2.txt.gz_ or _M1_heart_cDNA.txt.gz_, _M2_liver_gDNA.txt.gz_ etc.
+- A tab-delimited text file "Variants.txt" that includes your barcode sequences and the respective variants, e.g:
 
     > AGACTCGTTGTATAT&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;AAV1  
     TGGGCGGTCAGGGTC&emsp;&emsp;&emsp;&emsp;AAV2  
@@ -81,8 +81,8 @@ If you want to use the script to detect barcode sequences, you will need the fol
  &emsp;
 
 ### _For Peptide Detection_
-If you want to use the script to detect peptide insertions, you will only need the following input:
-- **A folder containing your sequencing data (gz files).** It is best practice to give your files a distinct name, e.g. _Sample1.txt.gz_, _Sample2.txt.gz_ or _M1_heart_cDNA.txt.gz_, _M2_liver_gDNA.txt.gz_ etc.
+If you want to use the script to detect peptide insertions, you will need the following input:
+- A folder containing **only** the raw input files in fastq format (either gunzipped or not). It would be best if you already rename the files and give them a distinct name, e.g. _Sample1.txt.gz_, _Sample2.txt.gz_ or _M1_heart_cDNA.txt.gz_, _M2_liver_gDNA.txt.gz_ etc.
 
  &emsp;
 
