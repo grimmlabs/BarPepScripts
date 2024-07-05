@@ -554,7 +554,7 @@ if args.mode == "BC":
         # The log output file is created that includes the total number of reads, the number of recovered reads, of reads with expected variants, with contaminating variants, with unknown variants and the ones where no constant region was found.
         log_output_file=out_dir+filename.split(".")[0]+".log.txt"
         f=open(log_output_file,'w')
-        f.write("====== Generated with Barcode & Peptide Detection Script 1.5 ======\n\n")
+        f.write("====== Generated with BarPepDetection Script 1.5 ======\n\n")
         f.write("\n"+str(filename.split(".")[0])+"\n\n")
         f.write("\nTotal number of reads: "+str(read_count))
         f.write("\nReads recovered: "+str(read_count-no_constant_region)+" ("+str(round((read_count-no_constant_region)/read_count*100, 2))+"%)"+"\n\nReads with expected variants: "+str(variant_reads)+" ("+str(round(variant_reads/read_count*100, 2))+"%)"+"\nReads with contaminating variants: "+str(contamination_reads-unknown_variants)+" ("+str(round((contamination_reads-unknown_variants)/read_count*100, 2))+"%)\n")
@@ -680,7 +680,7 @@ if args.mode == "PV":
         # The log file containing the total number of reads, recovered reads, and mean sequence length and quality is created.
         log_output_file=out_dir+filename.split(".")[0]+".log.txt"
         f=open(log_output_file,'w')
-        f.write("====== Generated with Barcode & Peptide Detection Script 1.5 ======\n\n")
+        f.write("====== Generated with BarPepDetection Script 1.5 ======\n\n")
         f.write("\n"+str(filename.split(".")[0])+"\n\n")
         f.write("\nTotal number of reads: " + "\t" + str(read_count))
         f.write("\nReads recovered: " + "\t" + str(read_count-no_constant_region)+" ("+str(round((read_count-no_constant_region)/read_count*100, 2))+"%)\n")
