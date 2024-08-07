@@ -422,6 +422,15 @@ if args.mode == "BC":
     with open(variants_barcode_file) as temp:
         fwd_variants=dict(line.strip().split() for line in temp if line.strip())
 
+    # Check if there are dublicate variant names. (Barcodes are required in only one orientation.)
+    ## Extract the list of variant names
+    variant_list = list(fwd_variants.values())
+    ## Convert the list to a set to remove dublicates
+    variant_set = set(variant_list)
+    ##Check if there are dublicate variant names and raise an error
+    if len(variant_list) != len(variant_set):
+        raise ValueError("The same variant name is used for different barcodes.\nEach variant name should be associated with only one barcode sequence. Barcodes are required in only one orientation. \n")
+
     #add the reverse complements to the variants dictionary 
     rc_variants = {}
     for barcode, variant in fwd_variants.items():
