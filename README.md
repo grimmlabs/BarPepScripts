@@ -53,7 +53,16 @@ Python3 (version used to test this script: 3.12.3) with these modules is require
 - Seaborn (0.13.2)
 
 **Note:** Especially for the pandas module, it is important that you use the indicated version! The script might not work with older or newer versions of pandas.
-  
+
+To install required modules :
+```
+# on linux
+pip install -r requirements.txt
+
+# on windows
+py -m pip install -r requirements.txt
+```
+Read more about pip : https://pip.pypa.io/en/stable/installation/
 &emsp;
 
 # BarPepDetection
