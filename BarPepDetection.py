@@ -524,7 +524,8 @@ if args.mode == "BC":
         # If it is not a gz file, the file is skipped and the next file is checked
         else:
             continue
-        
+
+        # Exit the script if there are 0 recovered reads in all files
         if len(barcode_calc) == 0:
             sys.exit("No reads recovered in any input file. Check your flanking sequences. Exiting")
 
@@ -692,6 +693,7 @@ if args.mode == "PV":
         else:
             continue
 
+        # exit the script if there are 0 recovered reads in all files
         if len(PV_calc) == 0:
             sys.exit("No reads recovered in any input file. Check your flanking sequences. Exiting")
 
