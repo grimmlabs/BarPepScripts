@@ -102,7 +102,7 @@ def save_combined_dataframe(df_dict, output_path, header, mode):
 
     # Save combined_df in a CSV file
     with open(output_path, 'w') as f:
-        combined_df.to_csv(f, index=False)
+        combined_df.to_csv(f, index=False, lineterminator="\n")
     if silence:
         print(f"\n{header} DataFrames have been saved to {output_path}")
 
