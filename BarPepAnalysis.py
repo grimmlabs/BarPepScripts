@@ -473,7 +473,7 @@ if args.mode == "PV":
 
         # Read the CSV file into a DataFrame
         if os.path.exists(read_counts_file_path):
-            df = pd.read_csv(read_counts_file_path).iloc[:, 1:]
+            df = pd.read_csv(read_counts_file_path)
 
             # Create a key for the dictionary
             key = f"{animal}_{tissue}"
