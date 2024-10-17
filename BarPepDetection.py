@@ -25,6 +25,8 @@ import seaborn as sns
 import argparse
 import timeit
 
+import pdb
+
 
 #______________________________________________DEFINITION OF ARGUMENTS_____________________________________________________
 #
@@ -329,14 +331,15 @@ def barcode_detection(reads, BCV_left, BCV_right, BCV_left_revcomp, BCV_right_re
                 E=ln.find(BCV_left_revcomp)
                 if D-E==BCV_size+len(BCV_left_revcomp):
                     BCV=ln[E+len(BCV_left_revcomp):D]
-                    result.append(BCV)
+                    result.append(reverse_complement(BCV))
                 else:
                     F=ln.rfind(BCV_right_revcomp)
                     if F-E==BCV_size+len(BCV_left_revcomp):
                         BCV=ln[E+len(BCV_left_revcomp):F]
-                        result.append(BCV)
+                        result.append(reverse_complement(BCV))
                     else:
                         no_constant_region+=1
+
     return result, read_count, no_constant_region, size
 
 
@@ -375,12 +378,12 @@ def barcode_detection_margin(reads, BCV_left, BCV_right, BCV_loc, BCV_margin, BC
                 E=ln.find(BCV_left_revcomp,BCV_loc_revcomp-BCV_margin-len(BCV_left))
                 if D-E==BCV_size+len(BCV_left_revcomp):
                     BCV=ln[E+len(BCV_left_revcomp):D]
-                    result.append(BCV)
+                    result.append(reverse_complement(BCV))
                 else:
                     F=ln.rfind(BCV_right_revcomp,BCV_loc_revcomp-BCV_margin+BCV_size,BCV_loc_revcomp+BCV_margin+BCV_size+len(BCV_right))
                     if F-E==BCV_size+len(BCV_left_revcomp):
                         BCV=ln[E+len(BCV_left_revcomp):F]
-                        result.append(BCV)
+                        result.append(reverse_complement(BCV))
                     else:
                         no_constant_region+=1
     return result, read_count, no_constant_region, size
@@ -421,30 +424,18 @@ if args.mode == "BC":
     # Variants and their corresponding barcode-sequences are stored in a dictionary called variants: {'barcode':'variant'}
     variants_barcode_file = args.variants
     with open(variants_barcode_file) as temp:
-        fwd_variants=dict(line.strip().split() for line in temp if line.strip())
+        variants=dict(line.strip().split() for line in temp if line.strip())
 
     # Check if there are dublicate variant names. (Barcodes are required in only one orientation.)
     ## Extract the list of variant names
-    variant_list = list(fwd_variants.values())
+    variant_list = list(variants.values())
     ## Convert the list to a set to remove dublicates
     variant_set = set(variant_list)
     ##Check if there are dublicate variant names and raise an error
     if len(variant_list) != len(variant_set):
         raise ValueError("The same variant name is used for different barcodes.\nEach variant name should be associated with only one barcode sequence. Barcodes are required in only one orientation. \n")
-
-    #add the reverse complements to the variants dictionary 
-    rc_variants = {}
-    for barcode, variant in fwd_variants.items():
-        ## Calculate reverse complement of the barcode
-        rc_barcode = reverse_complement(barcode)
-        ## Assign a new name to the reverse complement barcode; append variant name with "RC"
-        rc_variant = f"{variant}_RC"
-        ## Add to rc_variants dictionary
-        rc_variants[rc_barcode] = rc_variant
-    ## Merge rc_variants and fwd_variants into variants dictionary
-    variants = fwd_variants.copy()
-    variants.update(rc_variants)
-
+   
+    
     if silence:
         print("\nVariants file: "+variants_barcode_file)
 
@@ -537,17 +528,7 @@ if args.mode == "BC":
         df.insert(1, "Variant", df["Barcode"])
         df = df.replace({"Variant": variants})
         df = df.replace({"Variant": contaminations})
-
-        # Determine the sequence orientation and add a new column 'Orientation' to the dataframe with the identified values
-        def determine_orientation(variant):
-            if variant.endswith("_RC"):
-                return "rev", variant[:-3]  # Remove "_RC" from the variant name
-            else:
-                return "fwd", variant
-        df["Orientation"], df["Variant"] = zip(*df["Variant"].apply(determine_orientation))
         
-        # Group by the 'Variant' column and sum the 'Count' column to get the total count of each variant (forward and reverse complement)
-        df = df.groupby("Variant", as_index=False).agg({"Count": "sum", "Barcode" : "first"})
 
         # Labelling unknown barcodes
         df["Variant"] = df.apply(rename_variants, axis=1)
@@ -567,10 +548,11 @@ if args.mode == "BC":
         df_contaminations.index = df_contaminations.index + 1
 
         # Convert the variants dictionary to a DataFrame
-        barcode_df = pd.DataFrame(list(fwd_variants.items()), columns=['Barcode', 'Variant'])
+        barcode_df = pd.DataFrame(list(variants.items()), columns=['Barcode', 'Variant'])
         # Creating a DataFrame with the barcode sequences, variants, and counts
         df_variants = df_variants.drop(columns=['Barcode'])
         merged_df = pd.merge(barcode_df, df_variants, on=['Variant'], how='left')
+
         # Fill missing counts with 0
         merged_df['Count'] = merged_df['Count'].fillna(0).astype(int)
         # Sort the DataFrame alphabetically by the variant names
