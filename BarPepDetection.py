@@ -25,9 +25,6 @@ import seaborn as sns
 import argparse
 import timeit
 
-import pdb
-
-
 #______________________________________________DEFINITION OF ARGUMENTS_____________________________________________________
 #
 
@@ -592,12 +589,12 @@ if args.mode == "BC":
 
         # The output file with the variants and their counts is created.
         variants_output_file=out_dir+filename.split(".")[0]+"_Variants.csv"
-        sorted_df_variants.to_csv(variants_output_file, index=False, lineterminator="\n")
+        sorted_df_variants.to_csv(variants_output_file, index=False, lineterminator=os.linesep)
 
 
         # Another output file with the contaminating variants and/or sequences and their respective count is created.
         contaminations_output_file=out_dir+filename.split(".")[0]+"_UnknownVariants.csv"
-        df_contaminations.to_csv(contaminations_output_file, index=False, lineterminator="\n")
+        df_contaminations.to_csv(contaminations_output_file, index=False, lineterminator=os.linesep)
 
 
         # Print time for the file
@@ -711,7 +708,7 @@ if args.mode == "PV":
 
         # The PV CSV file containing the peptide sequences and their counts is created.
         PV_output_file=out_dir+filename.split(".")[0]+"_PV.csv"
-        df_PV.to_csv(PV_output_file, index=False, lineterminator="\n")
+        df_PV.to_csv(PV_output_file, index=False, lineterminator=os.linesep)
 
 
         # Print time for the file
