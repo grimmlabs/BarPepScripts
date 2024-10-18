@@ -113,7 +113,9 @@ Give the path to the directory where the output files should be saved.
 Give the short flanking oligo sequence at 5' of the barcode/peptide location.  
 
 - **-r BCVRIGHT:**  
-Give the short flanking oligo sequence at 3' of the barcode/peptide location. 
+Give the short flanking oligo sequence at 3' of the barcode/peptide location.
+
+**Important:** The orientation in which you indicate the flanking regions is crucial in determining the correct orientation of the found barcode or peptide sequence. If you run into problems its best to double check if your flanking sequences appear in the orientation you expect.
 
 &emsp;
 
