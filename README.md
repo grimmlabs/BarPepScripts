@@ -115,7 +115,7 @@ Give the short flanking oligo sequence at 5' of the barcode/peptide location.
 - **-r BCVRIGHT:**  
 Give the short flanking oligo sequence at 3' of the barcode/peptide location.
 
-**Important:** The orientation in which you indicate the flanking regions is crucial in determining the correct orientation of the found barcode or peptide sequence. If you run into problems its best to double check if your flanking sequences appear in the orientation you expect.
+**Important:** The orientation in which you indicate the flanking regions is crucial in determining the correct orientation of the found barcode or peptide sequence. If you run into problems it is advisable to double check your input reads if the flanking sequences appear in the expected orientation.
 
 &emsp;
 
@@ -156,7 +156,7 @@ Give the length of the peptide sequence in nucleotides. This argument is require
 
 &emsp;
 
-By default, the script searches for the barcode or peptide sequence over the complete length of the read. If you want to restrict the search to a specific margin, you need to specifiy the arguments BCVLOC, BCVMARGIN, and BCVLOCREVCOMP. These arguments restrict the search for the flanking regions to a given area within all reads, which marginally improves the performance.
+By default, the script searches for the barcode or peptide sequence over the complete length of the read. If you want to restrict the search to a specific margin, you need to specifiy the arguments BCVLOC, BCVMARGIN, and BCVLOCREVCOMP. These arguments restrict the search for the flanking regions to a given area within all reads, which improves the performance in longer reads.
 
 &emsp;
 
