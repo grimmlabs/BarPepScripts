@@ -238,7 +238,7 @@ Other input files that you will need, but won't have to be specially prepared:
 &emsp;
 
 ### _For Peptide Analysis_
-In this mode the script requires the outout from the _BarPepDetection_ script as well as one input file containing a table with your filenames, animals, and tissues. This file is easily prepared in Excel or a similar program and then saved as a CSV file. **The separator in the CSV file has to be a ','.** 
+In this mode the script requires the output from the _BarPepDetection_ script as well as one input file containing a table with your filenames, animals, and tissues. This file is easily prepared in Excel or a similar program and then saved as a CSV file. **The separator in the CSV file has to be a ','.** 
 &emsp;
 
 The input file MUST follow this structure:
