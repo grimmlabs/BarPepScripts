@@ -263,9 +263,9 @@ Other input files that you will need, but won't have to be specially prepared:
 &emsp;
 
 ## Arguments BarPepAnalysis
-If you are running the script for the first time, open the Windows Terminal and call the script with 
+If you are running the script for the first time, open the Terminal and call the script with 
 ```
-python BarPepDetection.py -h
+python BarPepAnalysis.py -h
 ````
 
 This will give you a list of the arguments that you need to specifiy for running the script successfully:  
