@@ -205,7 +205,7 @@ This Script can be applied both for barcoded and peptide insertion screens, indi
 ## Prepare your Input Files
 ### _For Barcode Analysis_
 
-In this mode the script requires the outout from the _BarPepDetection_ script as well as one input file containing a table with your filenames, animals, tissues, and a weight_varialble (vg/dg). This file is easily prepared in Excel or a similar program and then saved as a CSV file. **The separator in the CSV file has to be a ','.** 
+In this mode the script requires the output from the _BarPepDetection_ script as well as one input file containing a table with your filenames, animals, tissues, and a weight_varialble (vg/dg). This file is easily prepared in Excel or a similar program and then saved as a CSV file. **The separator in the CSV file has to be a ','.** 
 
 &emsp;
 
