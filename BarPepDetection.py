@@ -8,22 +8,10 @@
 # For each sample, output files are generated which can be further analysed using the BarPep Analysis Script.
 
 
+# Init argparser
+v = "====== Barcode & Peptide Detection Script 1.0.1 \n authors and contributors: J. Sippel, J. Weinmann, S. Weis, O. Maiakovska, E. Locke, C.Baumgartl"
 
-#_________________________________________________NECESSARY IMPORTS_______________________________________________________
-#
-
-import os
-import sys
-import matplotlib.pyplot as plt
-from Bio import SeqIO
-from gzip import open as gzopen
-from matplotlib.backends.backend_pdf import PdfPages
-import numpy as np
-import pandas as pd
-import matplotlib.patches as patches
-import seaborn as sns
 import argparse
-import timeit
 
 #______________________________________________DEFINITION OF ARGUMENTS_____________________________________________________
 #
@@ -49,7 +37,7 @@ optional.add_argument("-m", "--BCVmargin", type=int, required=False, default=5, 
 optional.add_argument("-k", "--BCVlocrevcomp", type=int, required=False, help="Give the position of the first expected barcode nt on the reverse complement strand if the read numbering starts with 0.")
 optional.add_argument("-p", "--plots", action="store_true", help="Set flag if you want to generate plots showing the quality of your sequencing run.")
 optional.add_argument("-w", "--silence", action="store_false", help="Set flag to avoid printouts in the terminal.")
-optional.add_argument("-z" "--version", action="version", version="\n"*5+"====== Barcode & Peptide Detection Script 1.5 (modified by J. Sippel, J. Weinmann, S. Weis, O. Maiakovska, and E. Locke) ======\n\n", help="Set flag if you want to print script's version number and exit.")
+optional.add_argument("-z", "--version", action="version", version=v, help="print script's version number and exit.")
 barcode.add_argument("-v", "--variants", required=False, help="Give the path to the tab-delimited text file that includes unique barcode sequences assigned to one of the cap variants.")
 barcode.add_argument("-c", "--contaminations", required=False, help="If you want to check your sequencing data for contaminations, give the path to the tab-delimited text file that includes unique barcode sequences assigned to contaminating cap variants.")
 peptide.add_argument("-s", "--BCVsize", type=int, help="Give the length of the peptide sequence.")
@@ -58,14 +46,26 @@ args = ap.parse_args()
 
 
 
-#_________________________________INITIALIZATION OF SILENCE VARIABLE TO AVOID PRINTOUTS_____________________________________
+#_________________________________INITIALIZATION NECESSARY MODULES_____________________________________
 #
 
 silence = args.silence
 
 if silence:
-    print("\n"*5+"====== Barcode & Peptide Detection Script 1.5 (modified by J. Sippel, J. Weinmann, S. Weis, O. Maiakovska, E. Locke, C. Baumgartl) ======\n\n")
+    print("\n"*5+v)
 
+# import necessary modules
+import os
+import sys
+import matplotlib.pyplot as plt
+from Bio import SeqIO
+from gzip import open as gzopen
+from matplotlib.backends.backend_pdf import PdfPages
+import numpy as np
+import pandas as pd
+import matplotlib.patches as patches
+import seaborn as sns
+import timeit
 
 
 #_________________________________________DEFINITION OF REQUIRED FUNCTIONS__________________________________________________
