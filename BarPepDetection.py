@@ -9,7 +9,7 @@
 
 
 # Init argparser
-v = "====== Barcode & Peptide Detection Script 1.0.1 \n authors and contributors: J. Sippel, J. Weinmann, S. Weis, O. Maiakovska, E. Locke, C.Baumgartl"
+v = "Barcode & Peptide Detection Script 1.0.1 \n authors and contributors: J. Sippel, J. Weinmann, S. Weis, O. Maiakovska, E. Locke, C.Baumgartl"
 
 import argparse
 
