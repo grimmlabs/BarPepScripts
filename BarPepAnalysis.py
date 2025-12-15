@@ -1,8 +1,7 @@
-
 #!/usr/bin/env python
 
-#__==================================== BarPepAnalysis Script 2.0 ===================================__
-#__====================================== (written by E. Locke) =====================================__
+#__================================== BarPepAnalysis Script 2.0 ===================================__
+#__================== (written by E. Locke, S. Weis, C. Baumgartl) ==================__
 
 
 # This script analyses output files from the BarPepDetection Script.
@@ -40,7 +39,7 @@ required.add_argument("-a", "--mode", required = True, choices=["BC", "PV"], hel
 required.add_argument("-i", "--inputfile", required = True, help = "Path to your input CSV file containing the file names, animal, and tissue (+ for BC analysis sample type and weight_variable).")
 required.add_argument("-d", "--directory", required = True, help = "Path to the directory containing the output CSV files from the Detection Script.")
 optional.add_argument("-o", "--outputdir", required=False, help="Path to the directory where the output files should be saved. If not specified, a new folder in the directory with the input data will be automatically created for the output files.")
-optional.add_argument("-w", "--silence", action="store_false", help="Set flag to avoid printouts in the terminal.")
+optional.add_argument("-w", "--silent", action="store_true", help="Set flag to avoid printouts in the terminal.")
 optional.add_argument("-z" "--version", action="version", version="\n"*5+"====== Barcode & Peptide Analysis Script 2.0 (written by E. Locke) ======\n\n", help="Set flag if you want to print script's version number and exit.")
 optional.add_argument("-p", "--pseudo", type=float, default=1e-6, help="Pseudocount to be added to columns containing zeroes. Default 1e-6.")
 barcode.add_argument("-l", "--libraryNorm", required = False, help = "Path to the output CSV file of the input library from the Detection Script.")
@@ -50,12 +49,12 @@ args = ap.parse_args()
 
 
 
-#_____________________________________INITIALIZATION OF SILENCE VARIABLE TO AVOID PRINTOUTS____________________________________
+#_____________________________________INITIALIZATION OF silent VARIABLE TO AVOID PRINTOUTS____________________________________
 #
 
-silence = args.silence
+silent = args.silent
 
-if silence:
+if not silent:
     print("\n"*5+"====== BarPepAnalysis Script 2.0 (written by E. Locke) ======\n")
 
 
@@ -103,7 +102,7 @@ def save_combined_dataframe(df_dict, output_path, header, mode):
     # Save combined_df in a CSV file
     with open(output_path, 'w') as f:
         combined_df.to_csv(f, index=False, lineterminator="\n")
-    if silence:
+    if not silent:
         print(f"\n{header} DataFrames have been saved to {output_path}")
 
 
@@ -133,7 +132,7 @@ else:
 
 if args.mode == "BC":
 
-    if silence:
+    if not silent:
         print("Barcode Analysis Script is running.\n")
 
 
@@ -146,11 +145,11 @@ if args.mode == "BC":
     inputfile['weight_variable'] = inputfile['weight_variable'] + args.pseudo
     # Print a warning message if any zero values were replaced
     if zero_count_before > 0:
-        if silence:
+        if not silent:
             print(f"Warning: {zero_count_before} zero values found in weight_variable. {args.pseudo} was added to all values in column weight_variable.\n")
 
     # Print the inputfile DataFrame
-    if silence:
+    if not silent:
         print("Given inputfile:\n")
         print(inputfile)
 
@@ -166,7 +165,7 @@ if args.mode == "BC":
     variants_norm['Count'] = variants_norm['Count'] + args.pseudo
     # Print a warning message if any zero values were replaced
     if zero_count_before > 0:
-        if silence:
+        if not silent:
             print(f"Warning: {zero_count_before} zero values found in counts. {args.pseudo} was added to all counts.")
     # Calculate the total count
     total_count = variants_norm['Count'].sum()
@@ -177,7 +176,7 @@ if args.mode == "BC":
     # Rename the columns to 'Variant' and 'InputNorm' explicitly
     variants_norm = variants_norm.rename(columns={'Variant': 'Variant', 'InputNorm': 'InputNorm'})
     # Print the resulting DataFrame
-    if silence:
+    if not silent:
         print("\n\nComputed input library normalization values:\n")
         print(variants_norm)
 
@@ -207,7 +206,7 @@ if args.mode == "BC":
 
         # Print warning if file could not be found
         else:
-            if silence:
+            if not silent:
                 print(f"\n\nWarning: File {os.path.join(my_dir, filename)} does not exist. Skipping.\n")
 
         # Merge the tissue_df with the corresponding DataFrame on the "Variant" column
@@ -448,7 +447,7 @@ if args.mode == "BC":
 
 if args.mode == "PV":
 
-    if silence:
+    if not silent:
         print("Peptide Analysis Script is running.\n")
 
 
@@ -483,15 +482,15 @@ if args.mode == "PV":
 
         # Print warning if file could not be found
         else:
-            if silence:
+            if not silent:
                 print(f"\n\nWarning: File {read_counts_file_path} does not exist. Skipping.\n")
 
 
     # Print the keys of the dictionary to verify
-    if silence:
+    if not silent:
         print("DataFrames loaded for the following animal_tissue combinations:")
-    for key in PV_dfs.keys():
-        print(key)
+        for key in PV_dfs.keys():
+            print(key)
 
 
 
@@ -545,5 +544,5 @@ if args.mode == "PV":
 
 
 # The script is completed!
-if silence:
+if not silent:
     print("\n\n======Script completed!======\n\n")

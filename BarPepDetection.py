@@ -36,7 +36,7 @@ optional.add_argument("-n", "--BCVloc", type=int, required= False , help = "Give
 optional.add_argument("-m", "--BCVmargin", type=int, required=False, default=5, help="Give the number of nt before and after BCV_loc to search for the barcode (5 is suggested).")
 optional.add_argument("-k", "--BCVlocrevcomp", type=int, required=False, help="Give the position of the first expected barcode nt on the reverse complement strand if the read numbering starts with 0.")
 optional.add_argument("-p", "--plots", action="store_true", help="Set flag if you want to generate plots showing the quality of your sequencing run.")
-optional.add_argument("-w", "--silence", action="store_false", help="Set flag to avoid printouts in the terminal.")
+optional.add_argument("-w", "--silent", action="store_true", help="Set flag to avoid printouts in the terminal.")
 optional.add_argument("-z", "--version", action="version", version=v, help="print script's version number and exit.")
 barcode.add_argument("-v", "--variants", required=False, help="Give the path to the tab-delimited text file that includes unique barcode sequences assigned to one of the cap variants.")
 barcode.add_argument("-c", "--contaminations", required=False, help="If you want to check your sequencing data for contaminations, give the path to the tab-delimited text file that includes unique barcode sequences assigned to contaminating cap variants.")
@@ -49,9 +49,9 @@ args = ap.parse_args()
 #_________________________________INITIALIZATION NECESSARY MODULES_____________________________________
 #
 
-silence = args.silence
+silent = args.silent
 
-if silence:
+if not silent:
     print("\n"*5+v)
 
 # import necessary modules
@@ -124,8 +124,8 @@ def plot_base_qualities(my_dir, filename, ax=None, limit=100000):
         ax.set_title("Per Base Sequence Quality for "+filename.split(".")[0])
 
         stop = timeit.default_timer()
-        if silence:
-            print("\nTime for Per Base Sequence Quality Plot: ", stop - start)
+        if not silent:
+            print(f"\nTime for Per Base Sequence Quality Plot: {stop - start} seconds")
         return
 
 
@@ -154,8 +154,8 @@ def plot_seq_qualities(my_dir, filename, limit=100000):
         ax.set_title("Per Sequence Quality for "+filename.split(".")[0])
 
         stop = timeit.default_timer()
-        if silence:
-            print("\nTime for Per Sequence Quality Plot: ", stop - start)
+        if not silent:
+            print(f"\nTime for Per Sequence Quality Plot: {stop - start} seconds")
         return
 
 
@@ -183,8 +183,8 @@ def plot_seq_length_dist(my_dir, filename, limit=100000):
         plt.xticks(np.arange(min(sizes)-2, max(sizes)+3, 1.0))
 
         stop = timeit.default_timer()
-        if silence:
-            print("\nTime for Sequence Length Distribution Plot: ", stop - start)
+        if not silent:
+            print(f"\nTime for Sequence Length Distribution Plot: {stop - start} seconds")
         return
 
 
@@ -242,8 +242,8 @@ def plot_base_seq_content(my_dir, filename, limit=100000):
     plt.title("Sequence Content across all Bases for " + filename.split(".")[0])
 
     stop = timeit.default_timer()
-    if silence:
-        print("\nTime for Per Base Sequence Content Plot: ", stop - start)
+    if not silent:
+        print(f"\nTime for Per Base Sequence Content Plot: {stop - start} seconds")
     return
 
 
@@ -253,22 +253,22 @@ def generate_plots(my_dir, filename, out_dir):
         plot_base_qualities(my_dir, filename)
         pdf.savefig()
         plt.close()
-        if silence:
+        if not silent:
             print("Per Base Sequence Quality Plot generated.")
         plot_seq_qualities(my_dir, filename)
         pdf.savefig()
         plt.close()
-        if silence:
+        if not silent:
             print("Per Sequence Quality Plot generated.")
         plot_base_seq_content(my_dir, filename)
         pdf.savefig()
         plt.close()
-        if silence:
+        if not silent:
             print("Sequence Content across all Bases Plot generated.")
         plot_seq_length_dist(my_dir, filename)
         pdf.savefig()
         plt.close()
-        if silence:
+        if not silent:
             print("Sequence Length Distribution Plot generated.\n")
 
 
@@ -304,7 +304,7 @@ def barcode_detection(reads, BCV_left, BCV_right, BCV_left_revcomp, BCV_right_re
     for line in SeqIO.parse(reads, "fastq"):
         read_count+=1
         if read_count % 10000000 == 0:
-            if silence:
+            if not silent:
                 print(str(read_count/1000000) + " mio lines checked")
         size.append(len(line))
         ln = str(line.seq).upper()
@@ -351,7 +351,7 @@ def barcode_detection_margin(reads, BCV_left, BCV_right, BCV_loc, BCV_margin, BC
     for line in SeqIO.parse(reads, "fastq"):
         read_count+=1
         if read_count % 10000000 == 0:
-            if silence:
+            if not silent:
                 print(str(read_count/1000000) + " mio lines checked")
         size.append(len(line))
         ln = str(line.seq).upper()
@@ -415,7 +415,7 @@ BCV_size = args.BCVsize
 
 if args.mode == "BC":
     startF = timeit.default_timer()
-    if silence:
+    if not silent:
         print("\n""Barcode Detection Script is running...\n")
 
     # Variants and their corresponding barcode-sequences are stored in a dictionary called variants: {'barcode':'variant'}
@@ -431,16 +431,16 @@ if args.mode == "BC":
     ##Check if there are dublicate variant names and raise an error
     if len(variant_list) != len(variant_set):
         raise ValueError("The same variant name is used for different barcodes.\nEach variant name should be associated with only one barcode sequence. Barcodes are required in only one orientation. \n")
-   
-    
-    if silence:
+
+
+    if not silent:
         print("\nVariants file: "+variants_barcode_file)
 
 
     # If the user gave a path to a tab-delimited text file containing the contaminating barcode sequences, the sequencing data will be checked for contaminations.
     if args.contaminations:
         contaminations_barcode_file = args.contaminations
-        if silence:
+        if not silent:
             print("\nSequencing data will be checked for contaminations.")
             print("Contamination file: "+contaminations_barcode_file)
 
@@ -458,7 +458,7 @@ if args.mode == "BC":
 
     # If the user did not give a path to a contamination file the sequencing data will not be checked for contaminations
     else:
-        if silence:
+        if not silent:
             print("\nSequencing data will not be checked for contaminations.")
         contaminations = {}
 
@@ -467,7 +467,7 @@ if args.mode == "BC":
     objects=os.listdir(my_dir)
     j=0
     gz_files = [file for file in objects if file.endswith('.gz')]
-    if silence:
+    if not silent:
         print("\n\nThese files will be analyzed:\n")
         # Print the .gz files
         for gz_file in gz_files:
@@ -480,7 +480,7 @@ if args.mode == "BC":
         # The file is processed if it is a gz-file.
         if filename.endswith('gz'):
             start = timeit.default_timer()
-            if silence:
+            if not silent:
                 print("\n"*10+"Sample being processed: %s" %filename)
 
             # The file is opened
@@ -494,7 +494,7 @@ if args.mode == "BC":
 
                 # Length of the barcode is determined
                 BCV_size=len(list(variants.keys())[0])
-                if silence:
+                if not silent:
                     print("Searching for barcodes...")
 
                 # If the user did not specify the arguments for a defined search window, the defualt barcode detection function is called
@@ -525,7 +525,7 @@ if args.mode == "BC":
         df.insert(1, "Variant", df["Barcode"])
         df = df.replace({"Variant": variants})
         df = df.replace({"Variant": contaminations})
-        
+
 
         # Labelling unknown barcodes
         df["Variant"] = df.apply(rename_variants, axis=1)
@@ -534,7 +534,7 @@ if args.mode == "BC":
         df["VOI"] = df["Variant"].isin(list(variants.values()))
         df_variants = df.loc[df["VOI"] == True]
         del df_variants["VOI"]
-        
+
         # Extracting contaminating variants
         df_contaminations = df.loc[df["VOI"] == False]
         del df_contaminations["VOI"]
@@ -573,7 +573,7 @@ if args.mode == "BC":
         f.write("Reads with unknown variants: " + str(unknown_variants) + " (" + str(round((unknown_variants) / read_count * 100, 2)) + "%)" + "\nReads with no constant region found: " + str(no_constant_region) + " (" + str(round(no_constant_region / read_count * 100, 2)) + "%)\n")
         f.write("\nMean sequence length: "+str(mean_size)+" bp")
         f.write("\nMean sequence quality: "+str(round(mean_quality, 2)))
-        if silence:
+        if not silent:
             print("\nTotal number of reads: "+str(read_count))
             print("Reads recovered: "+str(read_count-no_constant_region)+" ("+str(round((read_count-no_constant_region)/read_count*100, 2))+"%)")
             print("Reads with expected variants: "+str(variant_reads)+" ("+str(round(variant_reads/read_count*100, 2))+"%)")
@@ -599,18 +599,18 @@ if args.mode == "BC":
 
         # Print time for the file
         stop = timeit.default_timer()
-        if silence:
-            print("\nTime for "+filename.split(".")[0]+": ", stop - start)
+        if not silent:
+            print(f"\nTime for {filename.split(".")[0]}: {stop - start} seconds")
 
 
     # Print time for the whole directory
     stopF = timeit.default_timer()
-    if silence:
-        print("\n\nTime for whole directory: ", stopF - startF)
+    if not silent:
+        print(f"\n\nTime for whole directory: {stopF - startF} seconds")
 
 
     # The script is completed!
-    if silence:
+    if not silent:
         print("\n\n\n====== Script completed! ======\n\n")
 
 
@@ -619,15 +619,19 @@ if args.mode == "BC":
 #
 
 if args.mode == "PV":
+
+    if type(BCV_size) != int:
+        raise TypeError("In peptide mode the size of the peptide insertion must be supplied as an integer.")
+
     startF = timeit.default_timer()
-    if silence:
+    if not silent:
         print("\n""Peptide Detection Script is running...\n")
 
 
     # The files in the directory are listed
     objects=os.listdir(my_dir)
     gz_files = [file for file in objects if file.endswith('.gz')]
-    if silence:
+    if not silent:
         print("\n\nThese files will be analyzed:\n")
         # Print the .gz files
         for gz_file in gz_files:
@@ -640,7 +644,7 @@ if args.mode == "PV":
         # The file is processed if it is a gz-file.
         if filename.endswith('gz'):
             start = timeit.default_timer()
-            if silence:
+            if not silent:
                 print("\n"*10+"Sample being processed: %s" %filename)
 
             # The file is opened
@@ -653,7 +657,7 @@ if args.mode == "PV":
                     generate_plots(my_dir, filename, out_dir)
 
                 # Files in directory are opened with Biopython SeqIO and the function for peptide detection is called
-                if silence:
+                if not silent:
                     print("Searching for peptides...")
 
                 # If the user did not specify the arguments for a defined search window, the defualt peptide detection function is called
@@ -696,7 +700,7 @@ if args.mode == "PV":
         f.write("\nReads recovered: " + "\t" + str(read_count-no_constant_region)+" ("+str(round((read_count-no_constant_region)/read_count*100, 2))+"%)\n")
         f.write("\nMean sequence length: "+str(mean_size)+" bp")
         f.write("\nMean sequence quality: "+str(round(mean_quality, 2)))
-        if silence:
+        if not silent:
             print("\nTotal number of reads: "+str(read_count))
             print("Reads recovered: "+str(read_count-no_constant_region)+" ("+str(round((read_count-no_constant_region)/read_count*100, 2))+"%)\n")
             print("Mean sequence length: "+str(mean_size)+" bp")
@@ -713,16 +717,16 @@ if args.mode == "PV":
 
         # Print time for the file
         stop = timeit.default_timer()
-        if silence:
-            print("\nTime for "+filename.split(".")[0]+": ", stop - start)
+        if not silent:
+            print(f"\nTime for {filename.split(".")[0]}: {stop - start} seconds")
 
 
     # Print time for the whole directory
     stopF = timeit.default_timer()
-    if silence:
-        print("\n\nTime for whole directory: ", stopF - startF)
+    if not silent:
+        print(f"\n\nTime for whole directory: {stopF - startF} seconds")
 
 
     # The script is completed!
-    if silence:
+    if not silent:
         print("\n\n\n====== Script completed! ======\n\n")

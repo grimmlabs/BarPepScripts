@@ -1,0 +1,11 @@
+====== Generated with Barcode & Peptide Detection Script 1.5 ======
+
+
+m1_input
+
+
+Total number of reads: 	47839
+Reads recovered: 	44941 (93.94%)
+
+Mean sequence length: 122 bp
+Mean sequence quality: 33.39
