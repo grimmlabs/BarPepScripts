@@ -49,7 +49,7 @@ python BarPepAnalysis.py -a BC -i example_data/assignment_file_for_analysis.BC.c
 python BarPepDetection.py -a PV -v example_data/variants.txt -d example_data/raw_reads/ -o example_output/ -l GGCCCA -r CCAGCC -s 21
 
 ## Analysis
-python BarPepAnalysis.py -a PV -i example_data/assignment_file_for_analysis.PV.csv -d example_output/ -x
+python BarPepAnalysis.py -a PV -i example_data/assignment_file_for_analysis.PV.csv -d example_output/
 ```
 # Requirements
 
