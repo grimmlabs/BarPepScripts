@@ -30,10 +30,13 @@ snakemake --cores 4
 The settings are found in the config file under 'config/snakemake.config.yaml'.
 
 _input directory_: path to the directory containing all fastq files
+
 _variants file_: path to the file containig named barcodes
+
 _output directory_: path to the desired output directory
 
 _reverse complement output_: dictates wether the found barcodes put out as reverse complement
+
 _flanks_: dictates the flanking sequences used to detect the barcode/peptide always in the format NNN...NNN. The length of each flank is up to you, but 8 to 12 bp are recommended.
 
 _error rate_: the allowed error rate for flanking region detection
