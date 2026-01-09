@@ -23,6 +23,7 @@ conda create -f env/barpep.yaml
 This command will start the analysis of the provided example data.
 
 ```
+conda activate barpep
 snakemake --cores 4
 ```
 
