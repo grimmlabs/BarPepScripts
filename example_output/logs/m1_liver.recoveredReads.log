@@ -1,0 +1,8 @@
+m1_liver
+
+Total number of reads: 47839
+Reads recovered: 45328 (94.75%)
+
+Reads with unknown variants: 311 (0.65%)
+Reads with no detected flanking regions: 2511 (5.25%)
+Reads with contaminating variants: 0 (0.0%)

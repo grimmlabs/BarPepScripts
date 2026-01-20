@@ -1,0 +1,8 @@
+m1_input
+
+Total number of reads: 47839
+Reads recovered: 45186 (94.45%)
+
+Reads with unknown variants: 308 (0.64%)
+Reads with no detected flanking regions: 2653 (5.55%)
+Reads with contaminating variants: 0 (0.0%)

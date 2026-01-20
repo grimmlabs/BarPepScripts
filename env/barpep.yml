@@ -1,0 +1,9 @@
+name: barpep
+channels:
+  - defaults
+  - bioconda
+  - conda-forge
+dependencies:
+  - cutadapt
+  - snakemake
+prefix: /home/conradin/miniconda3/envs/barpep
