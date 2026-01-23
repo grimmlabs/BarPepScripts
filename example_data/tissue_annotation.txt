@@ -1,0 +1,4 @@
+Sample	SampleType	Animal	Tissue	weight_variable
+m1_kidney	gDNA	m1	kidney	8.3
+m1_liver	gDNA	m1	liver	23.24
+m1_lung	gDNA	m1	lung	10.01

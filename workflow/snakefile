@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-configfile: "config/snakemake.config.yaml"
+configfile: "config/config.yaml"
 input_directory = config["input_directory"]
 output_directory = config["output_directory"]
 
@@ -16,9 +16,16 @@ SAMPLES = [
 #print("SAMPLES: ", SAMPLES)
 #import pdb; pdb.set_trace()
 
+all_input = [
+    expand("{output_directory}/logs/{sample}.recoveredReads.log", sample=SAMPLES, output_directory = output_directory)
+]
+if config["barcode_analysis"]:
+    all_input.append(output_directory + "/BC_analysis/04.Bab.csv")
+
 rule all:
     input:
-        expand("{output_directory}/logs/{sample}.recoveredReads.log", sample=SAMPLES, output_directory = output_directory)
+        all_input
+
 
 rule find_barcodes:
     input:
@@ -51,7 +58,7 @@ rule count_barcodes:
 rule join_with_variants:
     input:
         counts=output_directory + "/{sample}.counts.csv",
-        variants=config["variants_file"]
+        variants=config["annotation_file"]
     output:
         output_directory + "/{sample}.variantCounts.csv"
     run:
@@ -94,3 +101,50 @@ rule make_recoveredReads_log:
             out.write(f"Reads with unknown variants: {unknownVariants} ({unknownPerc}%)\n")
             out.write(f"Reads with no detected flanking regions: {negativeReads} ({negativePerc}%)\n")
             out.write(f"Reads with contaminating variants: 0 (0.0%)\n") # TODO
+
+
+rule BC_analysis:
+    input:
+        expand("{output_directory}/{sample}.variantCounts.csv", sample=SAMPLES, output_directory = output_directory)
+    output:
+        output_directory + "/BC_analysis/04.Bab.csv"
+    params:
+        tissue_annot = config["tissue_annotation"]
+    run:
+        # get input
+        if not config["alternative_input"]:
+            INPUT_SAMPLE = config["input_basename"]
+            INPUT_variantCounts = pd.read_csv(f"{output_directory}/{INPUT_SAMPLE}.variantCounts.csv")
+        elif not os.path.isfile(config["alternative_input"]):
+            try:
+                INPUT_variantCounts = pd.read_csv(config["alternative_input"])
+            except:
+                raise FileNotFoundError('Your supplied alternative input file was not found')
+        i = INPUT_variantCounts.loc[INPUT_variantCounts.variants != "Unknown"].set_index("variants").drop("barcode", axis=1).rename({"freq": "input_norm"}, axis=1) + float(config["pseudo_count"])
+        input_norm = i / i.sum(axis=0)
+
+        # load data
+        variantCounts = pd.concat(pd.read_csv(f).assign(Sample=os.path.basename(f).split(".")[0]) for f in [f"{output_directory}/{s}.variantCounts.csv" for s in SAMPLES]).reset_index(drop=True)
+        tissue_annot = pd.read_csv(params.tissue_annot, delimiter = "\t")
+        tissue_weights = pd.Series(tissue_annot.weight_variable.values, index=tissue_annot.Tissue).to_dict()
+        master_df = pd.merge(variantCounts, tissue_annot, "outer", "Sample")
+        # read counts
+        tissue_ReadCounts = (master_df[["freq", "variants", "SampleType", "Animal", "Tissue"]]
+                                .loc[master_df.variants != "Unknown"].dropna()
+                                .pivot(index="variants", values="freq", columns=["SampleType", "Animal", "Tissue"]))
+        tissue_ReadCounts.to_csv(f"{output_directory}/BC_analysis/01.readCounts.csv")
+        # Pab
+        tissue_Pab = tissue_ReadCounts / tissue_ReadCounts.sum(axis=0)
+        tissue_Pab.to_csv(f"{output_directory}/BC_analysis/02.Pab.csv")
+
+        # Pab*
+        Pabs = pd.merge(tissue_ReadCounts.stack(level = ["SampleType", "Animal"]).reset_index().set_index("variants"), input_norm, how="left", left_index=True, right_index=True)
+        tissue_list = [t for t in tissue_weights.keys()]
+        Pabs[tissue_list] = Pabs[tissue_list] + float(config["pseudo_count"]) # add pseudocount
+        Pabs[tissue_list] = Pabs[tissue_list].div(Pabs.input_norm, axis=0)
+        Pabs.to_csv(f"{output_directory}/BC_analysis/03.Pabs.csv")
+        # Bab
+        Bab = Pabs.copy()
+        for tissue, norm_val in tissue_weights.items():
+            Bab[tissue] = Bab[tissue] * norm_val
+        Bab.to_csv(f"{output_directory}/BC_analysis/04.Bab.csv")

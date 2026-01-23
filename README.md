@@ -15,7 +15,7 @@ This repository provides an updated combined version of the [Barcode Detection S
 Easiest way is to install via the provided conda environment:
 
 ```
-conda env create -f env/barpep.yaml
+conda env create -f env/barpep.yml
 ```
 
 # Quick Tutorial
@@ -33,22 +33,22 @@ The settings are found in the config file under 'config/config.yaml' and should 
 
 ## general
 
-*input directory*: path to the directory containing all fastq files.
+**input directory**: path to the directory containing all fastq files.
 
-*barcode annotation file*: path to a tab-separated look-up table containing barcode sequences and associated names.
+**annotation file**: path to a tab-separated look-up table containing barcode/peptide sequences and associated names.
 
-*output directory*: path to the desired output directory.
+**output directory**: path to the desired output directory.
 
-*reverse complement output*: dictates wether the found barcodes are put out as reverse complement, necessary for correct assignment using the barcode annotation table.
+**reverse complement output**: dictates wether the found barcodes are put out as reverse complement, necessary for correct assignment using the barcode annotation table.
 
 ## cutadapt options
 
-*flanks*: dictates the flanking sequences within the reads used to detect the barcode/peptide. Always in the format NNN...NNN, where NNN are the flanking nucleotides downstream and upstream of the barcode/peptide. The length of each flank is up to you, but 8 to 12 bp are recommended.
+**flanks**: dictates the flanking sequences within the reads used to detect the barcode/peptide. Always in the format NNN...NNN, where NNN are the flanking nucleotides downstream and upstream of the barcode/peptide. The length of each flank is up to you, but 8 to 12 bp are recommended.
 
-*error rate*: the allowed error rate for flanking region detection directly used by cutadapt.
+**error rate**: the allowed error rate for flanking region detection directly used by cutadapt.
 
-*cutadapt cores*: the number of cores assigned to cutadapt for flank detection. Set to 0 for auto detection of maximum cores. If you do that, do not set the snakemake --cores argument too high.
+**cutadapt cores**: the number of cores assigned to cutadapt for flank detection. Set to 0 for auto detection of maximum cores. If you do that, do not set the snakemake --cores argument too high.
 
-*barcode length min*: minimal length of barcode/peptide that is accepted.
+**barcode length min**: minimal length of barcode/peptide that is accepted.
 
-*barcode length max*: maximum length of barcode/peptide that is accepted.
+**barcode length max**: maximum length of barcode/peptide that is accepted.
