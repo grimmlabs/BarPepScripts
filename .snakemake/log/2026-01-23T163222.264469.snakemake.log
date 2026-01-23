@@ -1,3 +1,0 @@
-Exception in file "/home/conradin/projects/manuscripts/BarPepScripts/workflow/snakefile", line 21:
-Barcode analysis is not possible when no annotation file is given.
-  File "/home/conradin/projects/manuscripts/BarPepScripts/workflow/snakefile", line 21, in <module>
