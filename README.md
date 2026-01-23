@@ -37,7 +37,7 @@ The settings are found in the config file under 'config/config.yaml' and should 
 
 **input directory**: path to the directory containing all fastq files.
 
-**annotation file**: path to a tab-separated look-up table containing barcode sequences and associated names. Please adhere to the structure of example_data/seq_annotation.txt
+**annotation file**: path to a tab-separated look-up table containing barcode sequences and associated names. Please adhere to the structure of example_data/seq_annotation.txt. Required for barcode analysis. Set to False if not required.
 
 **output directory**: path to the desired output directory.
 

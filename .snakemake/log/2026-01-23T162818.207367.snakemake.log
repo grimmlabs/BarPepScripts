@@ -1,0 +1,4 @@
+BdbQuit in file "/home/conradin/projects/manuscripts/BarPepScripts/workflow/snakefile", line 21.
+  File "/home/conradin/projects/manuscripts/BarPepScripts/workflow/snakefile", line 21, in <module>
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/bdb.py", line 100, in trace_dispatch
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/bdb.py", line 125, in dispatch_line

@@ -1,0 +1,8 @@
+m1_kidney
+
+Total number of reads: 47839
+Reads recovered: 45248 (94.58%)
+
+Reads with unknown variants: 313 (0.65%)
+Reads with no detected flanking regions: 2591 (5.42%)
+Reads with contaminating variants: 0 (0.0%)

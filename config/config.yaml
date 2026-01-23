@@ -1,6 +1,6 @@
 # Input
 input_directory: example_data/raw_reads # only files in fastq format
-annotation_file: False # set to False if annotation not required
+annotation_file: example_data/seq_annotation.txt # set to False if annotation not required
 
 # output
 output_directory: example_output
@@ -15,7 +15,7 @@ error_rate: 0.1                # error rate for flanking region detection; the n
 cutadapt_cores: 0               # when 0, cutadapt automatically detects the maximum number of cores. Careful when setting in conjunction with snakemake --cores >1
 
 
-barcode_analysis: False
+barcode_analysis: True
 # barcode analysis
 tissue_annotation: example_data/tissue_annotation.txt # tab-separated file containig metadata on each input fastq file.
 input_basename: m1_input # basename (no file extension or path) of the fastq file

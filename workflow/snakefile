@@ -16,7 +16,10 @@ SAMPLES = [
 all_input = [
     expand("{output_directory}/logs/{sample}.recoveredReads.log", sample=SAMPLES, output_directory = output_directory)
 ]
-if config["barcode_analysis"]:
+
+if config["barcode_analysis"] and not config["annotation_file"]:
+ raise Exception("Barcode analysis is not possible when no annotation file is given. Please adjust config.")
+elif config["barcode_analysis"] and isinstance(config["annotation_file"], str):
     all_input.append(output_directory + "/BC_analysis/04.Bab.csv")
 
 rule all:
@@ -60,12 +63,11 @@ rule join_with_variants:
     params:
         variants=config["annotation_file"]
     run:
+        cuad = pd.read_csv(input.counts, names=["freq", "barcode"])
+        cuad["barcode"] = cuad["barcode"].str.strip().str.upper()
         if params.variants == False:
-            cuad = pd.read_csv(input.counts, names=["freq", "barcode"])
             cuad.to_csv(output[0], index=False)
         else:
-            cuad = pd.read_csv(input.counts, names=["freq", "barcode"])
-            cuad["barcode"] = cuad["barcode"].str.strip().str.upper()
             var = pd.read_csv(params.variants, names=["barcode", "variants"], delimiter = "\t")
             var["barcode"] = var["barcode"].str.strip().str.upper()
             joined = cuad.merge(var, how = "outer", on = "barcode").fillna(value = {"freq": 0, "variants": "Unknown"}).astype({'freq': 'int64'})
