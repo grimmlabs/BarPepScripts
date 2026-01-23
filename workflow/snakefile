@@ -13,9 +13,6 @@ SAMPLES = [
     os.path.basename(s).split(".")[0] for s in INPUT_FILES
     ]
 
-#print("SAMPLES: ", SAMPLES)
-#import pdb; pdb.set_trace()
-
 all_input = [
     expand("{output_directory}/logs/{sample}.recoveredReads.log", sample=SAMPLES, output_directory = output_directory)
 ]
@@ -57,17 +54,22 @@ rule count_barcodes:
 
 rule join_with_variants:
     input:
-        counts=output_directory + "/{sample}.counts.csv",
-        variants=config["annotation_file"]
+        counts=output_directory + "/{sample}.counts.csv"
     output:
         output_directory + "/{sample}.variantCounts.csv"
+    params:
+        variants=config["annotation_file"]
     run:
-        cuad = pd.read_csv(input.counts, names=["freq", "barcode"])
-        cuad["barcode"] = cuad["barcode"].str.strip().str.upper()
-        var = pd.read_csv(input.variants, names=["barcode", "variants"], delimiter = "\t")
-        var["barcode"] = var["barcode"].str.strip().str.upper()
-        joined = cuad.merge(var, how = "outer", on = "barcode").fillna(value = {"freq": 0, "variants": "Unknown"}).astype({'freq': 'int64'})
-        joined.to_csv(output[0], index=False)
+        if params.variants == False:
+            cuad = pd.read_csv(input.counts, names=["freq", "barcode"])
+            cuad.to_csv(output[0], index=False)
+        else:
+            cuad = pd.read_csv(input.counts, names=["freq", "barcode"])
+            cuad["barcode"] = cuad["barcode"].str.strip().str.upper()
+            var = pd.read_csv(params.variants, names=["barcode", "variants"], delimiter = "\t")
+            var["barcode"] = var["barcode"].str.strip().str.upper()
+            joined = cuad.merge(var, how = "outer", on = "barcode").fillna(value = {"freq": 0, "variants": "Unknown"}).astype({'freq': 'int64'})
+            joined.to_csv(output[0], index=False)
 
 rule gather_input_stats:
     input:
@@ -89,18 +91,26 @@ rule make_recoveredReads_log:
         variantCounts = pd.read_csv(input.variantCounts)
         recoveredReads = variantCounts["freq"].sum()
         recoveredPerc = round(recoveredReads / total_reads*100, 2)
-        unknownVariants = variantCounts["variants"].value_counts()["Unknown"]
-        unknownPerc = round(unknownVariants / total_reads*100, 2)
-        negativeReads = total_reads - recoveredReads
-        negativePerc = round(negativeReads / total_reads*100, 2)
 
-        with open(output[0], "w") as out:
-            out.write(wildcards.sample + "\n\n")
-            out.write(f"Total number of reads: {total_reads}\n")
-            out.write(f"Reads recovered: {recoveredReads} ({recoveredPerc}%)\n\n")
-            out.write(f"Reads with unknown variants: {unknownVariants} ({unknownPerc}%)\n")
-            out.write(f"Reads with no detected flanking regions: {negativeReads} ({negativePerc}%)\n")
-            out.write(f"Reads with contaminating variants: 0 (0.0%)\n") # TODO
+        if config["annotation_file"] == False: # limited information when no annotation file is given
+            with open(output[0], "w") as out:
+                out.write(wildcards.sample + "\n\n")
+                out.write(f"Total number of reads: {total_reads}\n")
+                out.write(f"Reads recovered: {recoveredReads} ({recoveredPerc}%)\n\n")
+        else:
+            unknownVariants = variantCounts["variants"].value_counts()["Unknown"]
+            unknownPerc = round(unknownVariants / total_reads*100, 2)
+            negativeReads = total_reads - recoveredReads
+            negativePerc = round(negativeReads / total_reads*100, 2)
+            with open(output[0], "w") as out:
+                out.write(wildcards.sample + "\n\n")
+                out.write(f"Total number of reads: {total_reads}\n")
+                out.write(f"Reads recovered: {recoveredReads} ({recoveredPerc}%)\n\n")
+                out.write(f"Reads with unknown variants: {unknownVariants} ({unknownPerc}%)\n")
+                out.write(f"Reads with no detected flanking regions: {negativeReads} ({negativePerc}%)\n")
+                out.write(f"Reads with contaminating variants: 0 (0.0%)\n") # TODO
+
+
 
 
 rule BC_analysis:

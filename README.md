@@ -10,6 +10,8 @@ This repository provides an updated combined version of the [Barcode Detection S
 
 [Configuration](#configuration)
 
+[Barcode analysis output files explanation](#barcode-analysis-output-files-explanation)
+
 # Installation
 
 Easiest way is to install via the provided conda environment:
@@ -35,7 +37,7 @@ The settings are found in the config file under 'config/config.yaml' and should 
 
 **input directory**: path to the directory containing all fastq files.
 
-**annotation file**: path to a tab-separated look-up table containing barcode/peptide sequences and associated names.
+**annotation file**: path to a tab-separated look-up table containing barcode sequences and associated names. Please adhere to the structure of example_data/seq_annotation.txt
 
 **output directory**: path to the desired output directory.
 
@@ -52,3 +54,72 @@ The settings are found in the config file under 'config/config.yaml' and should 
 **barcode length min**: minimal length of barcode/peptide that is accepted.
 
 **barcode length max**: maximum length of barcode/peptide that is accepted.
+
+## barcode analysis
+
+**barcode_analysis**: Flag whether barcode analysis is performed.
+
+**tissue_annotation**: Required tab-separated file, containing metadata on each input fastq file. Please use the scheme below. **The Sample should contain the basename of the input file without path or file extensions!**
+
+| Sample   | SampleType| Animal     |Tissue        | weight_variable|
+|----------|-----------|------------|--------------|----------------|
+| Sample1  | cDNA      | M1         | Heart        | 0.00635        |
+| Sample2  | gDNA      | M1         | Heart        | 0.00635        |
+| Sample3  | cDNA      | M1         | Kidney       | 0.000293       |
+| Sample4  | gDNA      | M1         | Kidney       | 0.000293       |
+| Sample5  | cDNA      | M2         | Lung         | 0.00871        |
+| Sample6  | gDNA      | M2         | Lung         | 0.00871        |
+
+**input_basename**: Basename (no file extension or path) of the file in the input fastq directory that contains normalisation information (e.g. library before injection).
+
+**alternative_input**: If required, you can supply the path to an alternative input variantCount.csv file. When there is a path here, it overwrites the input_basename option. Default=False.
+
+**pseudo_count**: Pseudo count added dividing 0 values for input normalisation.
+
+# Barcode analysis output files explanation
+
+- **01.readCounts.csv**  
+Table of raw read counts of each variant in each tissue for each unique combination of animal and sample type.
+
+- **02.Pab.csv**  
+Proportional read count values, or P<sub>αβ</sub> values. They are calculated by normalizing the read counts R of all variants α in tissue β to the sum of all variants α in β:
+
+$$
+\displaystyle
+\ P_{αβ}= \frac{R_{αβ}}{\sum_{α} R_{αβ}}
+$$  
+
+- **03.Pabs.csv**  
+Proportional count values normalized to the input library, or P*<sub>αβ</sub> values. They are calculated by normalizing P<sub>αβ</sub> to the proportion of each variant α in the initial library L<sub>α</sub>, thus correcting for the uneven composition in library:
+
+$$
+\displaystyle
+\ P_{αβ}^*= \frac{P_{αβ}}{L_{α}}
+$$
+
+- **04.Bab.csv**  
+P*<sub>αβ</sub> is weighted by the weight_variable (e.g. vg/dg or RQ values), termed G<sub>β</sub>, to allow a comparison of one variant α over all analyzed tissues β:
+
+$$
+\displaystyle
+\ B_{αβ}= \frac{P_{αβ}}{L_{α}}*G_β
+$$
+
+
+## Currently not supported
+
+- **V<sub>αβ</sub>**  
+B<sub>αβ</sub> values are shown as proportions of the sum over all variants α of B<sub>αβ</sub>. These values can be useful to create bar plots which demonstrate the proportion of all variants α in one tissue β, exemplifying the efficiency of the individual vectors:  
+
+$$
+\displaystyle
+\ V_{αβ}= \frac{B_{αβ}}{\sum_{α} B_{αβ}}
+$$    
+
+- **T<sub>αβ</sub>**  
+B<sub>αβ</sub> values are shown as proportions of the sum over all tissues β of B<sub>αβ</sub>. These values can be useful to create bar plots which show the proportion of one variant α in all tissues β, allowing an analysis of the tissue specificity:
+
+$$
+\displaystyle
+\ T_{αβ}= \frac{B_{αβ}}{\sum_{β} B_{αβ}}
+$$  

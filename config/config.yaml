@@ -1,6 +1,6 @@
 # Input
 input_directory: example_data/raw_reads # only files in fastq format
-annotation_file: example_data/seq_annotation.txt
+annotation_file: False # set to False if annotation not required
 
 # output
 output_directory: example_output
