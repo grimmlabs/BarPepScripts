@@ -35,31 +35,31 @@ The settings are found in the config file under 'config/config.yaml' and should 
 
 ## general
 
-**input directory**: path to the directory containing all fastq files.
+**input_directory**: Path to the directory containing all fastq files. The basename (no file extension) of each input file is used throughout this pipeline; therefore, it is best to use clear and descriptive file names.
 
-**annotation file**: path to a tab-separated look-up table containing barcode sequences and associated names. Please adhere to the structure of example_data/seq_annotation.txt. Required for barcode analysis. Set to False if not required.
+**annotation_file**: Path to a tab-separated look-up table containing barcode sequences and associated names. Please adhere to the structure of example_data/seq_annotation.txt. Required for barcode analysis. Set to False if not required.
 
-**output directory**: path to the desired output directory.
+**output_directory**: Path to the desired output directory.
 
-**reverse complement output**: dictates wether the found barcodes are put out as reverse complement, necessary for correct assignment using the barcode annotation table.
+**reverse_complement_output**: Dictates whether the found barcodes are put out as reverse complement, necessary for correct assignment using the barcode annotation table.
 
 ## cutadapt options
 
-**flanks**: dictates the flanking sequences within the reads used to detect the barcode/peptide. Always in the format NNN...NNN, where NNN are the flanking nucleotides downstream and upstream of the barcode/peptide. The length of each flank is up to you, but 8 to 12 bp are recommended.
+**flanks**: The flanking sequences within the reads used to detect the barcode/peptide. Always in the format NNN...NNN, where NNN are the flanking nucleotides downstream and upstream of the barcode/peptide. The length of each flank is up to you, but 8 to 12 bp is recommended. The flanking sequences need to be in the same orientation as the reads are.
 
-**error rate**: the allowed error rate for flanking region detection directly used by cutadapt.
+**error_rate**: Allowed error rate for flanking region detection directly used by cutadapt.
 
-**cutadapt cores**: the number of cores assigned to cutadapt for flank detection. Set to 0 for auto detection of maximum cores. If you do that, do not set the snakemake --cores argument too high.
+**cutadapt_cores**: Number of cores assigned to cutadapt for flank detection. Set to 0 for auto-detection of maximum cores. Careful, when using 0 together with snakemake --cores all.
 
-**barcode length min**: minimal length of barcode/peptide that is accepted.
+**barcode_length_min**: Minimal length of barcode/peptide that is accepted.
 
-**barcode length max**: maximum length of barcode/peptide that is accepted.
+**barcode_length_max**: Maximum length of barcode/peptide that is accepted.
 
 ## barcode analysis
 
-**barcode_analysis**: Flag whether barcode analysis is performed.
+**barcode_analysis**: Flag whether barcode analysis is performed. Barcode analysis needs an annotation file.
 
-**tissue_annotation**: Required tab-separated file, containing metadata on each input fastq file. Please use the scheme below. **The Sample should contain the basename of the input file without path or file extensions!**
+**tissue_annotation**: Required tab-separated file, containing metadata on each input fastq file. The weight variable is used for normalising each tissue and thus calculating Bαβ. Traditionally, the weight variable represents vg/dg measurements of every tissue, but can be replaced by a value of choice. Please use the scheme below or the tissue_annotation file from the example data. **The Sample should contain the basename of the input file without path or file extensions!**
 
 | Sample   | SampleType| Animal     |Tissue        | weight_variable|
 |----------|-----------|------------|--------------|----------------|
@@ -90,7 +90,7 @@ $$
 $$  
 
 - **03.Pabs.csv**  
-Proportional count values normalized to the input library, or P*<sub>αβ</sub> values. They are calculated by normalizing P<sub>αβ</sub> to the proportion of each variant α in the initial library L<sub>α</sub>, thus correcting for the uneven composition in library:
+Proportional count values normalized to the input library, or P*<sub>αβ</sub> values. They are calculated by normalizing P<sub>αβ</sub> to the proportion of each variant α in the initial library L<sub>α</sub>, thus correcting for the uneven composition in the input library:
 
 $$
 \displaystyle
@@ -106,7 +106,7 @@ $$
 $$
 
 
-## Currently not supported
+## For completeness' sake, but currently not supported
 
 - **V<sub>αβ</sub>**  
 B<sub>αβ</sub> values are shown as proportions of the sum over all variants α of B<sub>αβ</sub>. These values can be useful to create bar plots which demonstrate the proportion of all variants α in one tissue β, exemplifying the efficiency of the individual vectors:  
