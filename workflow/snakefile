@@ -1,4 +1,4 @@
-import os
+import os, shutil
 import pandas as pd
 
 configfile: "config/config.yaml"
@@ -89,21 +89,25 @@ rule make_recoveredReads_log:
     output:
         output_directory + "/logs/{sample}.recoveredReads.log"
     run:
+        # copy the config file into output for later reference
+        shutil.copyfile("config/config.yaml", output_directory + "/logs/used_config.yaml")
+        # get number of reads, of variants
         with open(input.stats, "r") as fi: total_reads = int(fi.readlines()[1].split()[3].replace(",", ""))
         variantCounts = pd.read_csv(input.variantCounts)
         recoveredReads = variantCounts["freq"].sum()
         recoveredPerc = round(recoveredReads / total_reads*100, 2)
-
+        negativeReads = total_reads - recoveredReads
+        negativePerc = round(negativeReads / total_reads*100, 2)
         if config["annotation_file"] == False: # limited information when no annotation file is given
             with open(output[0], "w") as out:
                 out.write(wildcards.sample + "\n\n")
                 out.write(f"Total number of reads: {total_reads}\n")
                 out.write(f"Reads recovered: {recoveredReads} ({recoveredPerc}%)\n\n")
+                out.write(f"Reads with no detected flanking regions: {negativeReads} ({negativePerc}%)\n")
         else:
+            # get number of unknown variants, and
             unknownVariants = variantCounts["variants"].value_counts()["Unknown"]
             unknownPerc = round(unknownVariants / total_reads*100, 2)
-            negativeReads = total_reads - recoveredReads
-            negativePerc = round(negativeReads / total_reads*100, 2)
             with open(output[0], "w") as out:
                 out.write(wildcards.sample + "\n\n")
                 out.write(f"Total number of reads: {total_reads}\n")
