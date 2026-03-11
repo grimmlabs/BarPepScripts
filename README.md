@@ -17,7 +17,7 @@ This repository provides an updated combined version of the [Barcode Detection S
 Easiest way is to install via the provided conda environment:
 
 ```
-conda env create -f env/barpep.yml
+conda env create -f env/barpep.yaml
 ```
 
 # Quick Tutorial

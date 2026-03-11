@@ -6,4 +6,3 @@ channels:
 dependencies:
   - cutadapt
   - snakemake
-prefix: /home/conradin/miniconda3/envs/barpep
