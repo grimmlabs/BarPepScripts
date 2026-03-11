@@ -39,7 +39,7 @@ rule find_barcodes:
     log:
         output_directory + "/logs/{sample}.cutadapt.log"
     shell:
-        "cutadapt -a {params.flanks} -e {params.error_rate} -j {params.cores} -o {output} {input} > {log}"
+        "cutadapt -a {params.flanks} --revcomp -e {params.error_rate} -j {params.cores} -o {output} {input} > {log}"
 
 
 SEQKIT_FLAGS = "-sprgv" if config["reverse_complement_output"] else "-sgv"

@@ -7,7 +7,7 @@ output_directory: example_output
 
 # barcode/peptide detection
 reverse_complement_output: True # return reverse complement of the barcode
-flanks: "CCTGGGCTGG...TGGGCCTCTC"   # needs to match the read orientation
+flanks: "CCTGGGCTGG...TGGGCCTCTC"   # any orientation
 
 barcode_length_min: 21
 barcode_length_max: 21

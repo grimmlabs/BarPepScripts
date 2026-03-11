@@ -45,7 +45,7 @@ The settings are found in the config file under 'config/config.yaml' and should 
 
 ## cutadapt options
 
-**flanks**: The flanking sequences within the reads used to detect the barcode/peptide. Always in the format NNN...NNN, where NNN are the flanking nucleotides downstream and upstream of the barcode/peptide. The length of each flank is up to you, but 8 to 12 bp is recommended. The flanking sequences need to be in the same orientation as the reads are.
+**flanks**: The flanking sequences within the reads used to detect the barcode/peptide. Always in the format NNN...NNN, where NNN are the flanking nucleotides downstream and upstream of the barcode/peptide. The length of each flank is up to you, but 8 to 12 bp is recommended. Can be any orientation.
 
 **error_rate**: Allowed error rate for flanking region detection directly used by cutadapt.
 
