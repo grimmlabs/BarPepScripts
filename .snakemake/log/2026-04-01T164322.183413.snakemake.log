@@ -1,0 +1,3 @@
+AttributeError in file "/home/conradin/projects/manuscripts/BarPepScripts/snakefile", line 9:
+module 'os' has no attribute 'isfile'
+  File "/home/conradin/projects/manuscripts/BarPepScripts/snakefile", line 9, in <module>

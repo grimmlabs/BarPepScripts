@@ -1,0 +1,332 @@
+Assuming unrestricted shared filesystem usage.
+host: conradin-Precision-3650-Tower
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 8
+Rules claiming more threads will be scaled down.
+Job stats:
+job                        count
+-----------------------  -------
+BC_analysis                    1
+all                            1
+count_barcodes                 4
+find_barcodes                  4
+gather_input_stats             4
+join_with_variants             4
+make_recoveredReads_log        4
+save_config_provenance         1
+total                         23
+
+Select jobs to execute...
+Execute 8 jobs...
+[Wed Apr  1 16:45:49 2026]
+localrule gather_input_stats:
+    input: example_data/raw_reads/m1_kidney.fastq.gz
+    output: example_output/m1_kidney.stats.txt
+    jobid: 12
+    reason: Missing output files: example_output/m1_kidney.stats.txt
+    wildcards: sample=m1_kidney
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:49 2026]
+localrule find_barcodes:
+    input: example_data/raw_reads/m1_input.fastq.gz
+    output: example_output/m1_input.barcodes.fasta
+    log: example_output/logs/m1_input.cutadapt.log
+    jobid: 20
+    reason: Missing output files: example_output/m1_input.barcodes.fasta
+    wildcards: sample=m1_input
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:49 2026]
+localrule find_barcodes:
+    input: example_data/raw_reads/m1_liver.fastq.gz
+    output: example_output/m1_liver.barcodes.fasta
+    log: example_output/logs/m1_liver.cutadapt.log
+    jobid: 10
+    reason: Missing output files: example_output/m1_liver.barcodes.fasta
+    wildcards: sample=m1_liver
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:49 2026]
+localrule save_config_provenance:
+    output: example_output/logs/used_config.yaml
+    jobid: 22
+    reason: Missing output files: example_output/logs/used_config.yaml
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:49 2026]
+localrule gather_input_stats:
+    input: example_data/raw_reads/m1_input.fastq.gz
+    output: example_output/m1_input.stats.txt
+    jobid: 17
+    reason: Missing output files: example_output/m1_input.stats.txt
+    wildcards: sample=m1_input
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:49 2026]
+localrule gather_input_stats:
+    input: example_data/raw_reads/m1_lung.fastq.gz
+    output: example_output/m1_lung.stats.txt
+    jobid: 2
+    reason: Missing output files: example_output/m1_lung.stats.txt
+    wildcards: sample=m1_lung
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:49 2026]
+localrule gather_input_stats:
+    input: example_data/raw_reads/m1_liver.fastq.gz
+    output: example_output/m1_liver.stats.txt
+    jobid: 7
+    reason: Missing output files: example_output/m1_liver.stats.txt
+    wildcards: sample=m1_liver
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:49 2026]
+localrule find_barcodes:
+    input: example_data/raw_reads/m1_kidney.fastq.gz
+    output: example_output/m1_kidney.barcodes.fasta
+    log: example_output/logs/m1_kidney.cutadapt.log
+    jobid: 15
+    reason: Missing output files: example_output/m1_kidney.barcodes.fasta
+    wildcards: sample=m1_kidney
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:49 2026]
+Finished jobid: 12 (Rule: gather_input_stats)
+1 of 23 steps (4%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Wed Apr  1 16:45:49 2026]
+localrule find_barcodes:
+    input: example_data/raw_reads/m1_lung.fastq.gz
+    output: example_output/m1_lung.barcodes.fasta
+    log: example_output/logs/m1_lung.cutadapt.log
+    jobid: 5
+    reason: Missing output files: example_output/m1_lung.barcodes.fasta
+    wildcards: sample=m1_lung
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:49 2026]
+Finished jobid: 17 (Rule: gather_input_stats)
+2 of 23 steps (9%) done
+[Wed Apr  1 16:45:49 2026]
+Finished jobid: 2 (Rule: gather_input_stats)
+3 of 23 steps (13%) done
+[Wed Apr  1 16:45:49 2026]
+Finished jobid: 7 (Rule: gather_input_stats)
+4 of 23 steps (17%) done
+[Wed Apr  1 16:45:50 2026]
+Finished jobid: 10 (Rule: find_barcodes)
+5 of 23 steps (22%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Wed Apr  1 16:45:50 2026]
+localrule count_barcodes:
+    input: example_output/m1_liver.barcodes.fasta
+    output: example_output/m1_liver.counts.csv
+    jobid: 9
+    reason: Missing output files: example_output/m1_liver.counts.csv; Input files updated by another job: example_output/m1_liver.barcodes.fasta
+    wildcards: sample=m1_liver
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:50 2026]
+Finished jobid: 20 (Rule: find_barcodes)
+6 of 23 steps (26%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Wed Apr  1 16:45:50 2026]
+localrule count_barcodes:
+    input: example_output/m1_input.barcodes.fasta
+    output: example_output/m1_input.counts.csv
+    jobid: 19
+    reason: Missing output files: example_output/m1_input.counts.csv; Input files updated by another job: example_output/m1_input.barcodes.fasta
+    wildcards: sample=m1_input
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:50 2026]
+Finished jobid: 5 (Rule: find_barcodes)
+7 of 23 steps (30%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Wed Apr  1 16:45:50 2026]
+localrule count_barcodes:
+    input: example_output/m1_lung.barcodes.fasta
+    output: example_output/m1_lung.counts.csv
+    jobid: 4
+    reason: Missing output files: example_output/m1_lung.counts.csv; Input files updated by another job: example_output/m1_lung.barcodes.fasta
+    wildcards: sample=m1_lung
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:50 2026]
+Finished jobid: 9 (Rule: count_barcodes)
+8 of 23 steps (35%) done
+Removing temporary output example_output/m1_liver.barcodes.fasta.
+Select jobs to execute...
+Execute 1 jobs...
+[Wed Apr  1 16:45:50 2026]
+localrule join_with_variants:
+    input: example_output/m1_liver.counts.csv
+    output: example_output/m1_liver.variantCounts.csv
+    jobid: 8
+    reason: Missing output files: example_output/m1_liver.variantCounts.csv; Input files updated by another job: example_output/m1_liver.counts.csv
+    wildcards: sample=m1_liver
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:50 2026]
+Finished jobid: 15 (Rule: find_barcodes)
+9 of 23 steps (39%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Wed Apr  1 16:45:50 2026]
+localrule count_barcodes:
+    input: example_output/m1_kidney.barcodes.fasta
+    output: example_output/m1_kidney.counts.csv
+    jobid: 14
+    reason: Missing output files: example_output/m1_kidney.counts.csv; Input files updated by another job: example_output/m1_kidney.barcodes.fasta
+    wildcards: sample=m1_kidney
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:50 2026]
+Finished jobid: 19 (Rule: count_barcodes)
+10 of 23 steps (43%) done
+Removing temporary output example_output/m1_input.barcodes.fasta.
+Select jobs to execute...
+Execute 1 jobs...
+[Wed Apr  1 16:45:50 2026]
+localrule join_with_variants:
+    input: example_output/m1_input.counts.csv
+    output: example_output/m1_input.variantCounts.csv
+    jobid: 18
+    reason: Missing output files: example_output/m1_input.variantCounts.csv; Input files updated by another job: example_output/m1_input.counts.csv
+    wildcards: sample=m1_input
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:50 2026]
+Finished jobid: 4 (Rule: count_barcodes)
+11 of 23 steps (48%) done
+Removing temporary output example_output/m1_lung.barcodes.fasta.
+Select jobs to execute...
+Execute 1 jobs...
+[Wed Apr  1 16:45:50 2026]
+localrule join_with_variants:
+    input: example_output/m1_lung.counts.csv
+    output: example_output/m1_lung.variantCounts.csv
+    jobid: 3
+    reason: Missing output files: example_output/m1_lung.variantCounts.csv; Input files updated by another job: example_output/m1_lung.counts.csv
+    wildcards: sample=m1_lung
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:50 2026]
+Finished jobid: 14 (Rule: count_barcodes)
+12 of 23 steps (52%) done
+Removing temporary output example_output/m1_kidney.barcodes.fasta.
+Select jobs to execute...
+Execute 1 jobs...
+[Wed Apr  1 16:45:50 2026]
+localrule join_with_variants:
+    input: example_output/m1_kidney.counts.csv
+    output: example_output/m1_kidney.variantCounts.csv
+    jobid: 13
+    reason: Missing output files: example_output/m1_kidney.variantCounts.csv; Input files updated by another job: example_output/m1_kidney.counts.csv
+    wildcards: sample=m1_kidney
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:45:54 2026]
+Finished jobid: 22 (Rule: save_config_provenance)
+13 of 23 steps (57%) done
+[Wed Apr  1 16:45:54 2026]
+Finished jobid: 8 (Rule: join_with_variants)
+14 of 23 steps (61%) done
+Removing temporary output example_output/m1_liver.counts.csv.
+Select jobs to execute...
+Execute 1 jobs...
+[Wed Apr  1 16:45:54 2026]
+localrule make_recoveredReads_log:
+    input: example_output/m1_liver.stats.txt, example_output/m1_liver.variantCounts.csv
+    output: example_output/logs/m1_liver.recoveredReads.log
+    jobid: 6
+    reason: Missing output files: example_output/logs/m1_liver.recoveredReads.log; Input files updated by another job: example_output/m1_liver.stats.txt, example_output/m1_liver.variantCounts.csv
+    wildcards: sample=m1_liver
+    resources: tmpdir=/tmp
+Traceback (most recent call last):
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/site-packages/snakemake/executors/local.py", line 232, in spawn_job
+    subprocess.check_call(cmd, shell=True)
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/subprocess.py", line 413, in check_call
+    raise CalledProcessError(retcode, cmd)
+
+subprocess.CalledProcessError: Command 'cd /home/conradin/projects/manuscripts/BarPepScripts && /home/conradin/miniconda3/envs/barpep/bin/python3.12 -m snakemake --snakefile '/home/conradin/projects/manuscripts/BarPepScripts/snakefile' --target-jobs 'join_with_variants:sample=m1_lung' --allowed-rules join_with_variants --cores 8 --attempt 1 --force-use-threads  --force --target-files-omit-workdir-adjustment --max-inventory-time 0 --retries 0 --nocolor --no-hooks --nolock --ignore-incomplete --rerun-triggers mtime code input params software-env --conda-frontend 'conda' --shared-fs-usage source-cache software-deployment storage-local-copies persistence input-output sources --wrapper-prefix 'https://github.com/snakemake/snakemake-wrappers/raw/' --latency-wait 5 --scheduler 'ilp' --local-storage-prefix base64//LnNuYWtlbWFrZS9zdG9yYWdl --scheduler-solver-path '/home/conradin/miniconda3/envs/barpep/bin' --runtime-source-cache-path '/home/conradin/.cache/snakemake/snakemake/source-cache/snakemake-runtime-cache/tmpx4_atfb9' --default-resources base64//dG1wZGlyPXN5c3RlbV90bXBkaXI= --quiet progress rules host --mode 'subprocess' --local-groupid 'local'' died with <Signals.SIGINT: 2>.
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/site-packages/snakemake/executors/local.py", line 237, in cached_or_run
+    self.workflow.async_run(self.acached_or_run(job, run_func, *args))
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/site-packages/snakemake/workflow.py", line 265, in async_run
+    return runner.run(coro)
+           ^^^^^^^^^^^^^^^^
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/asyncio/base_events.py", line 664, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/site-packages/snakemake/executors/local.py", line 250, in acached_or_run
+    run_func(*args)
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/site-packages/snakemake/executors/local.py", line 234, in spawn_job
+    raise SpawnedJobError()
+
+snakemake.exceptions.SpawnedJobError
+
+[Wed Apr  1 16:46:05 2026]
+Error in rule join_with_variants:
+    message: None
+    jobid: 3
+    input: example_output/m1_lung.counts.csv
+    output: example_output/m1_lung.variantCounts.csv
+Traceback (most recent call last):
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/site-packages/snakemake/executors/local.py", line 232, in spawn_job
+    subprocess.check_call(cmd, shell=True)
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/subprocess.py", line 413, in check_call
+    raise CalledProcessError(retcode, cmd)
+
+subprocess.CalledProcessError: Command 'cd /home/conradin/projects/manuscripts/BarPepScripts && /home/conradin/miniconda3/envs/barpep/bin/python3.12 -m snakemake --snakefile '/home/conradin/projects/manuscripts/BarPepScripts/snakefile' --target-jobs 'make_recoveredReads_log:sample=m1_liver' --allowed-rules make_recoveredReads_log --cores 8 --attempt 1 --force-use-threads  --force --target-files-omit-workdir-adjustment --max-inventory-time 0 --retries 0 --nocolor --no-hooks --nolock --ignore-incomplete --rerun-triggers mtime code input params software-env --conda-frontend 'conda' --shared-fs-usage source-cache software-deployment storage-local-copies persistence input-output sources --wrapper-prefix 'https://github.com/snakemake/snakemake-wrappers/raw/' --latency-wait 5 --scheduler 'ilp' --local-storage-prefix base64//LnNuYWtlbWFrZS9zdG9yYWdl --scheduler-solver-path '/home/conradin/miniconda3/envs/barpep/bin' --runtime-source-cache-path '/home/conradin/.cache/snakemake/snakemake/source-cache/snakemake-runtime-cache/tmpx4_atfb9' --default-resources base64//dG1wZGlyPXN5c3RlbV90bXBkaXI= --quiet progress rules host --mode 'subprocess' --local-groupid 'local'' died with <Signals.SIGINT: 2>.
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/site-packages/snakemake/executors/local.py", line 237, in cached_or_run
+    self.workflow.async_run(self.acached_or_run(job, run_func, *args))
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/site-packages/snakemake/workflow.py", line 265, in async_run
+    return runner.run(coro)
+           ^^^^^^^^^^^^^^^^
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/asyncio/base_events.py", line 664, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/site-packages/snakemake/executors/local.py", line 250, in acached_or_run
+    run_func(*args)
+
+  File "/home/conradin/miniconda3/envs/barpep/lib/python3.12/site-packages/snakemake/executors/local.py", line 234, in spawn_job
+    raise SpawnedJobError()
+
+snakemake.exceptions.SpawnedJobError
+
+[Wed Apr  1 16:46:06 2026]
+Error in rule make_recoveredReads_log:
+    message: None
+    jobid: 6
+    input: example_output/m1_liver.stats.txt, example_output/m1_liver.variantCounts.csv
+    output: example_output/logs/m1_liver.recoveredReads.log

@@ -1,0 +1,24 @@
+# Input
+input_directory: example_data/raw_reads # only files in fastq format
+annotation_file: example_data/seq_annotation.txt # set to False if annotation not required
+
+# output
+output_directory: example_output
+
+# barcode/peptide detection
+reverse_complement_output: True # return reverse complement of the barcode
+flanks: "CCTGGGCTGG...TGGGCCTCTC"   # we recommend 10-15 bp on either side
+
+
+barcode_length_min: 21
+barcode_length_max: 21
+error_rate: 0.1                # error rate for flanking region detection; the number of allowed errors are rounded by cutadapt, meaning it not allow errors for short flanking regions even though the error rate is not 0; info in the created cutadapt log
+cutadapt_cores: 0               # when 0, cutadapt automatically detects the maximum number of cores. Careful when setting in conjunction with snakemake --cores >1
+
+
+barcode_analysis: True
+# barcode analysis
+tissue_annotation: example_data/tissue_annotation.txt # tab-separated file containig metadata on each input fastq file.
+input_basename: m1_input # basename (no file extension or path) of the fastq file
+alternative_input: False # path to alternative input variantCount.csv file. When there is a path here it overwrites the input_basename option
+pseudo_count: 1e-6 # to be added to input normalisation

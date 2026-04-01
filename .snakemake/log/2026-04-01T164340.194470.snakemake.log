@@ -1,0 +1,3 @@
+IndexError in file "/home/conradin/projects/manuscripts/BarPepScripts/snakefile", line 11:
+list index out of range
+  File "/home/conradin/projects/manuscripts/BarPepScripts/snakefile", line 11, in <module>

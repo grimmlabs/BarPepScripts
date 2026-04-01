@@ -1,0 +1,8 @@
+name: barpep
+channels:
+  - defaults
+  - bioconda
+  - conda-forge
+dependencies:
+  - cutadapt
+  - snakemake
