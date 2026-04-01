@@ -1,0 +1,8 @@
+m1_lung
+
+Total number of reads: 47839
+Reads recovered: 45023 (94.11%)
+
+Reads with unknown variants: 290 (0.61%)
+Reads with no detected flanking regions: 2816 (5.89%)
+Reads with contaminating variants: 0 (0.0%)

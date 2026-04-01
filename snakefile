@@ -1,4 +1,4 @@
-import os, shutil
+import os, shutil, warnings
 import pandas as pd
 
 configfile: "config/config.yaml"
@@ -17,14 +17,21 @@ all_input = [
     expand("{output_directory}/logs/{sample}.recoveredReads.log", sample=SAMPLES, output_directory = output_directory)
 ]
 
+# check necessary input for barcode analysis
 if config["barcode_analysis"] and not config["annotation_file"]:
  raise Exception("Barcode analysis is not possible when no annotation file is given. Please adjust config.")
 elif config["barcode_analysis"] and isinstance(config["annotation_file"], str):
     all_input.append(output_directory + "/BC_analysis/04.Bab.csv")
 
+# check flanking region length
+flanks = config["flanks"].split("...")
+if len(flanks[0]) < 10 or len(flanks[1]) < 10:
+    print("\033[35mWarning: Please consider longer flanking regions of at least 10 bps each.\033[0m")
+
 rule all:
     input:
-        all_input
+        all_input,
+        output_directory + "/logs/used_config.yaml"
 
 
 rule find_barcodes:
@@ -39,7 +46,7 @@ rule find_barcodes:
     log:
         output_directory + "/logs/{sample}.cutadapt.log"
     shell:
-        "cutadapt -a {params.flanks} --revcomp -e {params.error_rate} -j {params.cores} -o {output} {input} > {log}"
+        "cutadapt -a '{params.flanks}' --revcomp -e {params.error_rate} -j {params.cores} -o {output} {input} > {log}"
 
 
 SEQKIT_FLAGS = "-sprgv" if config["reverse_complement_output"] else "-sgv"
@@ -89,8 +96,6 @@ rule make_recoveredReads_log:
     output:
         output_directory + "/logs/{sample}.recoveredReads.log"
     run:
-        # copy the config file into output for later reference
-        shutil.copyfile("config/config.yaml", output_directory + "/logs/used_config.yaml")
         # get number of reads, of variants
         with open(input.stats, "r") as fi: total_reads = int(fi.readlines()[1].split()[3].replace(",", ""))
         variantCounts = pd.read_csv(input.variantCounts)
@@ -164,3 +169,11 @@ rule BC_analysis:
         for tissue, norm_val in tissue_weights.items():
             Bab[tissue] = Bab[tissue] * norm_val
         Bab.to_csv(f"{output_directory}/BC_analysis/04.Bab.csv")
+
+
+rule save_config_provenance:
+    output:
+        output_directory + "/logs/used_config.yaml"
+    run:
+        # copy original
+        shutil.copy(workflow.configfiles[0], output[0])

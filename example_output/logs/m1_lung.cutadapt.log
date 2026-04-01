@@ -1,0 +1,87 @@
+This is cutadapt 5.2 with Python 3.12.0
+Command line parameters: -a GGCTGG...TGGGCC --revcomp -e 0.1 -j 0 -o example_output/m1_lung.barcodes.fasta example_data/raw_reads/m1_lung.fastq.gz
+Processing single-end reads on 16 cores ...
+
+=== Summary ===
+
+Total reads processed:                  47,839
+Reads with adapters:                    45,695 (95.5%)
+Reverse-complemented:                       43 (0.1%)
+Reads written (passing filters):        47,839 (100.0%)
+
+Total basepairs processed:     5,836,358 bp
+Total written (filtered):      1,271,416 bp (21.8%)
+
+=== Adapter 1 ===
+
+Sequence: GGCTGG...TGGGCC; Type: linked; Length: 6+6; 5' trimmed: 45320 times; 3' trimmed: 45477 times; Reverse-complemented: 43 times
+
+Minimum overlap: 3+3
+No. of allowed errors:
+1-6 bp: 0
+
+No. of allowed errors:
+1-6 bp: 0
+
+Overview of removed sequences at 5' end
+length	count	expect	max.err	error counts
+3	89	747.5	0	89
+4	15	186.9	0	15
+5	4	46.7	0	4
+6	18	11.7	0	18
+7	14	11.7	0	14
+8	10	11.7	0	10
+14	2	11.7	0	2
+39	2	11.7	0	2
+40	2	11.7	0	2
+41	1	11.7	0	1
+42	1	11.7	0	1
+43	1	11.7	0	1
+44	23	11.7	0	23
+45	8338	11.7	0	8338
+46	7390	11.7	0	7390
+47	6971	11.7	0	6971
+48	5864	11.7	0	5864
+49	6177	11.7	0	6177
+50	5412	11.7	0	5412
+51	4955	11.7	0	4955
+52	21	11.7	0	21
+54	1	11.7	0	1
+57	1	11.7	0	1
+58	1	11.7	0	1
+86	1	11.7	0	1
+87	1	11.7	0	1
+93	1	11.7	0	1
+98	1	11.7	0	1
+108	1	11.7	0	1
+122	2	11.7	0	2
+
+
+
+Overview of removed sequences at 3' end
+length	count	expect	max.err	error counts
+3	171	747.5	0	171
+4	123	186.9	0	123
+35	1	11.7	0	1
+49	23	11.7	0	23
+50	4964	11.7	0	4964
+51	5434	11.7	0	5434
+52	6201	11.7	0	6201
+53	5860	11.7	0	5860
+54	6959	11.7	0	6959
+55	7380	11.7	0	7380
+56	8321	11.7	0	8321
+57	23	11.7	0	23
+60	1	11.7	0	1
+62	2	11.7	0	2
+64	1	11.7	0	1
+67	2	11.7	0	2
+70	1	11.7	0	1
+71	1	11.7	0	1
+72	1	11.7	0	1
+81	2	11.7	0	2
+82	1	11.7	0	1
+83	1	11.7	0	1
+84	1	11.7	0	1
+85	1	11.7	0	1
+87	2	11.7	0	2
