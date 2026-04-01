@@ -1,0 +1,129 @@
+Assuming unrestricted shared filesystem usage.
+host: conradin-Precision-3650-Tower
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 4
+Rules claiming more threads will be scaled down.
+Job stats:
+job                        count
+-----------------------  -------
+BC_analysis                    1
+all                            1
+join_with_variants             3
+make_recoveredReads_log        4
+total                          9
+
+Select jobs to execute...
+Execute 4 jobs...
+[Wed Apr  1 16:46:49 2026]
+localrule make_recoveredReads_log:
+    input: example_output/m1_liver.stats.txt, example_output/m1_liver.variantCounts.csv
+    output: example_output/logs/m1_liver.recoveredReads.log
+    jobid: 6
+    reason: Missing output files: example_output/logs/m1_liver.recoveredReads.log
+    wildcards: sample=m1_liver
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:46:49 2026]
+localrule join_with_variants:
+    input: example_output/m1_kidney.counts.csv
+    output: example_output/m1_kidney.variantCounts.csv
+    jobid: 13
+    reason: Missing output files: example_output/m1_kidney.variantCounts.csv
+    wildcards: sample=m1_kidney
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:46:49 2026]
+localrule join_with_variants:
+    input: example_output/m1_input.counts.csv
+    output: example_output/m1_input.variantCounts.csv
+    jobid: 18
+    reason: Missing output files: example_output/m1_input.variantCounts.csv
+    wildcards: sample=m1_input
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:46:49 2026]
+localrule join_with_variants:
+    input: example_output/m1_lung.counts.csv
+    output: example_output/m1_lung.variantCounts.csv
+    jobid: 3
+    reason: Missing output files: example_output/m1_lung.variantCounts.csv
+    wildcards: sample=m1_lung
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:46:51 2026]
+Finished jobid: 18 (Rule: join_with_variants)
+1 of 9 steps (11%) done
+Removing temporary output example_output/m1_input.counts.csv.
+Select jobs to execute...
+Execute 1 jobs...
+[Wed Apr  1 16:46:51 2026]
+localrule make_recoveredReads_log:
+    input: example_output/m1_input.stats.txt, example_output/m1_input.variantCounts.csv
+    output: example_output/logs/m1_input.recoveredReads.log
+    jobid: 16
+    reason: Missing output files: example_output/logs/m1_input.recoveredReads.log; Input files updated by another job: example_output/m1_input.variantCounts.csv
+    wildcards: sample=m1_input
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:46:51 2026]
+Finished jobid: 6 (Rule: make_recoveredReads_log)
+2 of 9 steps (22%) done
+Removing temporary output example_output/m1_liver.stats.txt.
+[Wed Apr  1 16:46:51 2026]
+Finished jobid: 13 (Rule: join_with_variants)
+3 of 9 steps (33%) done
+Removing temporary output example_output/m1_kidney.counts.csv.
+Select jobs to execute...
+Execute 1 jobs...
+[Wed Apr  1 16:46:51 2026]
+localrule make_recoveredReads_log:
+    input: example_output/m1_kidney.stats.txt, example_output/m1_kidney.variantCounts.csv
+    output: example_output/logs/m1_kidney.recoveredReads.log
+    jobid: 11
+    reason: Missing output files: example_output/logs/m1_kidney.recoveredReads.log; Input files updated by another job: example_output/m1_kidney.variantCounts.csv
+    wildcards: sample=m1_kidney
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:46:51 2026]
+Finished jobid: 3 (Rule: join_with_variants)
+4 of 9 steps (44%) done
+Removing temporary output example_output/m1_lung.counts.csv.
+Select jobs to execute...
+Execute 2 jobs...
+[Wed Apr  1 16:46:51 2026]
+localrule make_recoveredReads_log:
+    input: example_output/m1_lung.stats.txt, example_output/m1_lung.variantCounts.csv
+    output: example_output/logs/m1_lung.recoveredReads.log
+    jobid: 1
+    reason: Missing output files: example_output/logs/m1_lung.recoveredReads.log; Input files updated by another job: example_output/m1_lung.variantCounts.csv
+    wildcards: sample=m1_lung
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:46:51 2026]
+localrule BC_analysis:
+    input: example_output/m1_lung.variantCounts.csv, example_output/m1_liver.variantCounts.csv, example_output/m1_kidney.variantCounts.csv, example_output/m1_input.variantCounts.csv
+    output: example_output/BC_analysis/04.Bab.csv
+    jobid: 21
+    reason: Missing output files: example_output/BC_analysis/04.Bab.csv; Input files updated by another job: example_output/m1_kidney.variantCounts.csv, example_output/m1_lung.variantCounts.csv, example_output/m1_input.variantCounts.csv
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:46:53 2026]
+Finished jobid: 1 (Rule: make_recoveredReads_log)
+5 of 9 steps (56%) done
+Removing temporary output example_output/m1_lung.stats.txt.
+[Wed Apr  1 16:46:53 2026]
+Finished jobid: 16 (Rule: make_recoveredReads_log)
+6 of 9 steps (67%) done
+Removing temporary output example_output/m1_input.stats.txt.
+[Wed Apr  1 16:46:53 2026]
+Finished jobid: 11 (Rule: make_recoveredReads_log)
+7 of 9 steps (78%) done
+Removing temporary output example_output/m1_kidney.stats.txt.
+[Wed Apr  1 16:46:53 2026]
+Finished jobid: 21 (Rule: BC_analysis)
+8 of 9 steps (89%) done
+Select jobs to execute...
+Execute 1 jobs...
+[Wed Apr  1 16:46:53 2026]
+localrule all:
+    input: example_output/logs/m1_lung.recoveredReads.log, example_output/logs/m1_liver.recoveredReads.log, example_output/logs/m1_kidney.recoveredReads.log, example_output/logs/m1_input.recoveredReads.log, example_output/BC_analysis/04.Bab.csv, example_output/logs/used_config.yaml
+    jobid: 0
+    reason: Input files updated by another job: example_output/logs/m1_lung.recoveredReads.log, example_output/logs/m1_kidney.recoveredReads.log, example_output/logs/m1_input.recoveredReads.log, example_output/BC_analysis/04.Bab.csv, example_output/logs/m1_liver.recoveredReads.log
+    resources: tmpdir=/tmp
+[Wed Apr  1 16:46:53 2026]
+Finished jobid: 0 (Rule: all)
+9 of 9 steps (100%) done
+Complete log(s): /home/conradin/projects/manuscripts/BarPepScripts/.snakemake/log/2026-04-01T164649.437578.snakemake.log

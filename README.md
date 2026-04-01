@@ -35,7 +35,7 @@ The settings are found in the config file under 'config/config.yaml' and should 
 
 ## general
 
-**input_directory**: Path to the directory containing all fastq files. The basename (no file extension) of each input file is used throughout this pipeline; therefore, it is best to use clear and descriptive file names.
+**input_directory**: Path to the directory containing all fastq files (can be .gz). The basename (no file extension) of each input file is used throughout this pipeline; therefore, it is best to use clear and descriptive file names.
 
 **annotation_file**: Path to a tab-separated look-up table containing barcode sequences and associated names. Please adhere to the structure of example_data/seq_annotation.txt. Required for barcode analysis. Set to False if not required.
 

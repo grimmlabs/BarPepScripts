@@ -1,4 +1,4 @@
-import os, shutil, warnings
+import os, shutil
 import pandas as pd
 
 configfile: "config/config.yaml"
@@ -6,8 +6,10 @@ input_directory = config["input_directory"]
 output_directory = config["output_directory"]
 
 INPUT_FILES = [
-    os.path.join(input_directory, f) for f in os.listdir(input_directory)
-    ]
+    os.path.join(input_directory, f)
+    for f in os.listdir(input_directory)
+    if os.path.isfile(os.path.join(input_directory, f))
+]
 INPUT_FILES_ENDING = ".".join(INPUT_FILES[0].split(".")[1:])
 SAMPLES = [
     os.path.basename(s).split(".")[0] for s in INPUT_FILES
@@ -27,6 +29,7 @@ elif config["barcode_analysis"] and isinstance(config["annotation_file"], str):
 flanks = config["flanks"].split("...")
 if len(flanks[0]) < 10 or len(flanks[1]) < 10:
     print("\033[35mWarning: Please consider longer flanking regions of at least 10 bps each.\033[0m")
+
 
 rule all:
     input:
