@@ -33,7 +33,7 @@ snakemake --cores all
 
 The settings are found in the config file under 'config/config.yaml' and should be adjusted for your analysis.
 
-## general
+## config parameters
 
 **input_directory**: Path to the directory containing all fastq files (can be .gz). The basename (no file extension) of each input file is used throughout this pipeline; therefore, it is best to use clear and descriptive file names.
 
@@ -45,7 +45,7 @@ The settings are found in the config file under 'config/config.yaml' and should 
 
 ## cutadapt options
 
-**flanks**: The flanking sequences within the reads used to detect the barcode/peptide. Always in the format NNN...NNN, where NNN are the flanking nucleotides downstream and upstream of the barcode/peptide. The length of each flank is up to you, but 8 to 12 bp is recommended. Can be any orientation.
+**flanks**: The flanking sequences within the reads used to detect the barcode/peptide. Always in the format NNN...NNN, where NNN are the flanking nucleotides downstream and upstream of the barcode/peptide. The length of each flank is up to you, but 10 to 15 bp is recommended. Can be any orientation.
 
 **error_rate**: Allowed error rate for flanking region detection directly used by cutadapt.
 
