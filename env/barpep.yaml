@@ -6,3 +6,4 @@ channels:
 dependencies:
   - cutadapt
   - snakemake
+  - seqkit
