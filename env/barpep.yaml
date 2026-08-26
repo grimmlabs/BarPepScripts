@@ -7,3 +7,4 @@ dependencies:
   - cutadapt
   - snakemake
   - seqkit
+  - pandas
